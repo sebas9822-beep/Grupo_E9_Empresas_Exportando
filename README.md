@@ -1,6 +1,6 @@
 # Empresas que exportan desde Antioquia
 
-Equipo E9 · Análisis de Datos Básico · Estud-IA (Capa 2)
+Equipo E9 · Análisis de Datos Básico · Estud-IA (Capa 2- Sebastian Gaviria Lopez, Luis Gabriel Cespedes, Julio Cesar Yanez)
 
 > **Fuente real y pública:** los datos salen de las bases de exportaciones de la DIAN y de otras fuentes oficiales abiertas. No son datos sintéticos.
 
@@ -15,32 +15,43 @@ Propuesta: un área que acompaña o atiende a empresas exportadoras de Antioquia
 > Una sola pregunta que ayude a tomar esa decisión.
 
 ¿Qué empresas antioqueñas exportan, qué productos venden y a qué países, y cómo cambió eso entre 2024 y 2026?
-
+Pendiente por complementar o cambiar
 
 ### 3. Fuente de datos
 > Enlace o nombre de la fuente. ¿Es pública o es una muestra de práctica inventada (sintética)? Si es inventada, dilo aquí.
 
-Pública. La base principal son las [bases estadísticas de exportaciones de la DIAN](https://www.dian.gov.co/dian/cifras/Paginas/Bases-Estadisticas-de-Comercio-Exterior-Importaciones-y-Exportaciones.aspx), un archivo por mes. Se completa con datos abiertos del RUES (cámaras de comercio), Supersociedades, SECOP II, MinAgricultura, MinCIT y DIVIPOLA. La lista con enlaces está en [docs/fuentes.md](docs/fuentes.md).
+Pública. La base principal son las [bases estadísticas de exportaciones de la DIAN](https://www.dian.gov.co/dian/cifras/Paginas/Bases-Estadisticas-de-Comercio-Exterior-Importaciones-y-Exportaciones.aspx), un archivo por mes. Se completa con datos abiertos del RUES (cámaras de comercio), Supersociedades, SECOP II, MinAgricultura, MinCIT,Procolombia y DIVIPOLA. La lista con enlaces está en [docs/fuentes.md](docs/fuentes.md).
 
 En `datos/originales/` hay una muestra de 1.000 filas de la DIAN; los archivos completos pesan 1,5 GB y no se suben.
 
 ### 4. Qué representa una fila
-> Completa la frase: «Cada fila es…». ¿Qué campo distingue una fila de otra?
 
-Cada fila de la tabla de hechos es **un ítem de una declaración de exportación**: una subpartida (producto) que un exportador despachó en una declaración. La distingue `ID_REGISTRO`, que se asignó en la limpieza, porque la DIAN no trae una llave única: formulario + serie a veces se repite y 1.690 líneas no tienen formulario.
-
-En el directorio (`dim_exportador`), cada fila es una empresa y la distingue el `NIT`.
+RANKING_NACIONAL_FOB
+RANKING_ANTIOQUIA_FOB 
+RAZON_SOCIAL
+EMPRESA_ANTIOQUENA
+TIPO_EXPORTADOR
+CLASE_EXPORTADOR
+SECTOR_EXPORTADOR_PRINCIPAL
+FOB_USD_2024, FOB_USD_2025, FOB_USD_TOTAL, FOB_USD_ORIGEN_ANTIOQUIA,
+EXPORTADOR_2024_MIN_1000USD, EXPORTADOR_2025_MIN_1000USD
+TOP3_PAISES_DESTINO
+MODO_TRANSPORTE_PRINCIPAL
 
 ### 5. Periodo
 > ¿Qué fechas cubren los datos?
 
-De enero de 2024 a septiembre de 2026 (33 meses). El año 2026 está incompleto: la DIAN publica cada mes unos 35 días después del cierre.
+De enero de 2024 a diciembre de 2025.
 
 ### 6. Cuatro indicadores
-Pendiente
+Qué mide y cómo se calcula:
+- Valor exportado no minero-energético (total). Es la exportación que depende de las empresas y no del precio del oro.
+- Empresas exportadoras (conteo). Mide qué tan grande es la base.
+- Permanencia (porcentaje). Mide si esa base se sostiene, y una de cada cuatro empresas no repite.
+- Empresas de un solo destino (porcentaje). Mide la diversificación, y casi la mitad depende de un solo país.
 
 ### 7. Fuera de alcance
-Pendiente
+Datos internos de la empresa cómo capacidad de producción, costos totales  
 
 ## Comparaciones, riesgos y mapa de preguntas
 
