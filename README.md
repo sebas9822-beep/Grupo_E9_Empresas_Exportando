@@ -18,6 +18,7 @@ Este repositorio une en un solo proceso las dos búsquedas del proyecto:
 | `data/processed/serie_mensual_antioquia.csv` | FOB y número de exportadores por mes |
 | `data/processed/validacion_*.csv` | Comparación con MinCIT y MinAgricultura |
 | `data/processed/cobertura.json` | Periodo cubierto, totales y fecha de proceso |
+| `data/processed/bd_depurada/` | **BD única depurada** (paso 9): modelo estrella con tabla de hechos limpia (un parquet por mes), directorio, dimensiones, vistas de análisis, diccionario y log de limpieza. Se arma en un solo archivo DuckDB con `python crear_bd_depurada.py`. Ver [docs/limpieza_bd_depurada.md](docs/limpieza_bd_depurada.md) |
 
 ## Empezar sin correr nada
 
@@ -38,7 +39,18 @@ directorio = pd.read_csv("data/processed/directorio_exportadores_antioquenos.csv
 nme = ant[ant.NIT_EMPRESA_ANTIOQUENA & ~ant.ES_MINERO_ENERGETICO]
 ```
 
-Con DuckDB puedes consultar la base nacional sin cargarla en memoria:
+**BD depurada en un solo archivo.** Arma el DuckDB (~1 minuto, ~340 MB) y consulta con nombres en vez de códigos:
+
+```python
+# en la terminal: python crear_bd_depurada.py
+import duckdb
+con = duckdb.connect("data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb", read_only=True)
+con.sql("""SELECT PAIS_DESTINO, round(sum(VALOR_FOB_USD)/1e6,1) AS fob_musd FROM vw_exportaciones
+           WHERE ES_EXPORTADOR_ANTIOQUENO AND ANIO = 2025 AND NOT ES_DESTINO_ZONA_FRANCA
+           GROUP BY 1 ORDER BY 2 DESC LIMIT 10""").show()
+```
+
+Con DuckDB también puedes consultar la base nacional sin cargarla en memoria:
 
 ```python
 import duckdb
@@ -52,6 +64,7 @@ duckdb.sql("""SELECT PAIS_DESTINO_NORM, round(sum(VALOR_FOB_USD)/1e6,1) AS fob_m
 ```
 ├── config.py                  rutas, periodo y reglas (cámaras de Antioquia, definición minero-energética)
 ├── run_pipeline.py            corre todo el proceso o un tramo
+├── crear_bd_depurada.py       arma la BD depurada (.duckdb) desde data/processed/bd_depurada/
 ├── requirements.txt
 ├── pipeline/
 │   ├── comun.py               descargas, API de datos.gov.co, dígito de verificación
@@ -62,16 +75,22 @@ duckdb.sql("""SELECT PAIS_DESTINO_NORM, round(sum(VALOR_FOB_USD)/1e6,1) AS fob_m
 │   ├── p05_descargar_por_nit.py           RUES nacional y SECOP II por NIT (incremental)
 │   ├── p06_directorio.py                  directorio por empresa (une las dos búsquedas)
 │   ├── p07_exportar.py                    productos finales, validaciones, cobertura
-│   └── p08_excel.py                       Excel formateado
+│   ├── p08_excel.py                       Excel formateado
+│   ├── p09_bd_depurada.py                 BD única depurada: limpieza, modelo estrella, validación
+│   └── diccionario_bd_depurada.py         descripción de cada columna de la BD depurada
 ├── data/
 │   ├── raw/          datos crudos (~1,5 GB, no se versionan; ver data/raw/README.md)
 │   ├── interim/      intermedios regenerables (no se versionan)
 │   └── processed/    productos finales (sí se versionan)
+│       └── bd_depurada/   tablas de la BD depurada en parquet (el .duckdb se arma localmente)
 └── docs/
     ├── metodologia.md            definiciones, validación, problemas de calidad y limitaciones
     ├── fuentes.md                fuentes usadas y descartadas
     ├── diccionario_directorio.csv
     ├── diccionario_transaccional.csv
+    ├── limpieza_bd_depurada.md   qué se limpió en la BD depurada y por qué
+    ├── diccionario_bd_depurada.csv
+    ├── log_bd_depurada.csv       cada regla de limpieza con filas y FOB afectados
     └── referencias/              ficha técnica DIAN y correlativa de países
 ```
 
@@ -101,6 +120,7 @@ python run_pipeline.py --sin-descargas
 | 6 | Directorio: vínculo con Antioquia, sector, Supersociedades, SECOP | 1 y 2 |
 | 7 | Exporta parquet, CSV, serie, validaciones y diccionario | — |
 | 8 | Excel | — |
+| 9 | BD única depurada: hechos limpios, directorio recalculado, dimensiones, vistas y validación | — |
 
 ## Cómo se define "empresa antioqueña"
 

@@ -36,6 +36,8 @@ NITS_PATH = INTERIM / "nits_exportadores.csv"
 # Productos finales
 OUT_NACIONAL = PROCESSED / "exportaciones_nacional"     # un parquet por mes
 OUT_ANTIOQUIA = PROCESSED / "exportaciones_antioquia"   # un parquet por año
+OUT_BD_DEPURADA = PROCESSED / "bd_depurada"            # BD única depurada (paso 9): parquet por tabla
+BD_DEPURADA_DUCKDB = OUT_BD_DEPURADA / "BD_exportaciones_Colombia_depurada.duckdb"  # se arma localmente, no se versiona
 
 # Periodo de análisis (el fin se detecta con lo que haya publicado la DIAN)
 PERIODO_INICIO = "2024-01"
