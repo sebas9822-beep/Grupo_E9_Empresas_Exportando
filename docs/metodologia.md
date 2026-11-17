@@ -60,3 +60,7 @@ Sin esta corrección, en el directorio se pierde septiembre de 2024 de cada empr
 - El RUES no trae municipio; la cámara de comercio sirve como aproximación de la subregión.
 - Supersociedades solo cubre las 10.000 empresas más grandes, y sus cifras vienen en billones de pesos con 2 decimales.
 - Hay 60 combinaciones repetidas de formulario y serie dentro de un mismo archivo. Se dejaron tal como las publica la DIAN.
+
+## 8. BD única depurada
+
+El paso 9 convierte los productos anteriores en una sola base con modelo estrella y corrige problemas que quedaban en ellos: el país de destino de las zonas francas (todas aparecían como "ZFP de Rionegro S.A."), los dos esquemas de códigos de país y bandera (2024 frente a 2025), errores de digitación, códigos con y sin ceros a la izquierda, ceros que significan "no aplica", fechas guardadas como texto y columnas redundantes. El detalle está en [limpieza_bd_depurada.md](limpieza_bd_depurada.md).
