@@ -2,21 +2,20 @@
 
 Equipo E9 · Análisis de Datos Básico · Estud-IA (Capa 2)
 
-> **Fuente real y pública:** los datos salen de las bases de exportaciones de la DIAN y de otras fuentes oficiales abiertas. No son datos sintéticos. Lo que todavía falta confirmar en equipo está marcado como **PENDIENTE**.
+> **Fuente real y pública:** los datos salen de las bases de exportaciones de la DIAN y de otras fuentes oficiales abiertas. No son datos sintéticos.
 
 ## Ficha del proyecto · versión 1
 
 ### 1. Usuario y decisión
 > ¿Quién usará el resultado (una persona o un área) y qué va a decidir con él?
 
-**PENDIENTE:** confirmar en equipo quién es el usuario. Propuesta: un área que acompaña o atiende a empresas exportadoras de Antioquia (por ejemplo, una cámara de comercio o un área comercial). Con el resultado decide a qué empresas y sectores darles prioridad.
+Propuesta: un área que acompaña o atiende a empresas exportadoras de Antioquia (por ejemplo, una cámara de comercio o un área comercial). Con el resultado decide a qué empresas y sectores darles prioridad.
 
 ### 2. Pregunta principal
 > Una sola pregunta que ayude a tomar esa decisión.
 
 ¿Qué empresas antioqueñas exportan, qué productos venden y a qué países, y cómo cambió eso entre 2024 y 2026?
 
-**PENDIENTE:** ajustarla cuando se confirme el usuario (punto 1).
 
 ### 3. Fuente de datos
 > Enlace o nombre de la fuente. ¿Es pública o es una muestra de práctica inventada (sintética)? Si es inventada, dilo aquí.
@@ -38,20 +37,10 @@ En el directorio (`dim_exportador`), cada fila es una empresa y la distingue el 
 De enero de 2024 a septiembre de 2026 (33 meses). El año 2026 está incompleto: la DIAN publica cada mes unos 35 días después del cierre.
 
 ### 6. Cuatro indicadores
-> Nombre de cada indicador y, si ya puedes, cómo se calcula (qué se divide entre qué).
-
-1. **Valor exportado (FOB)** = suma de `VALOR_FOB_USD`, en dólares.
-2. **Empresas exportadoras** = número de NIT distintos que exportaron al menos USD 1.000 FOB en el año (el umbral que usa Analdex).
-3. **Participación de Antioquia** = FOB de mercancía de origen Antioquia ÷ FOB nacional.
-4. **Peso no minero-energético** = FOB sin petróleo, carbón, oro, ferroníquel ni demás minerales ÷ FOB total.
+Pendiente
 
 ### 7. Fuera de alcance
-> Lo que este proyecto NO va a responder.
-
-- Exportación de **servicios** (software, consultoría, turismo): no pasa por aduana y no está en la DIAN.
-- Rentabilidad, márgenes, empleo o ventas totales de las empresas.
-- Las **personas naturales**: la DIAN no publica su documento, así que no entran al directorio.
-- Importaciones y pronósticos.
+Pendiente
 
 ## Comparaciones, riesgos y mapa de preguntas
 
