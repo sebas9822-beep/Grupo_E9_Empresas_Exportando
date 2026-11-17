@@ -1,4 +1,4 @@
-"""Paso 7 · Productos finales en data/processed/.
+"""Paso 7 · Productos de líneas y directorio en datos/intermedios/productos_paso7/ (insumo del paso 9).
 
 - exportaciones_nacional/expo_nacional_AAAA_MM.parquet   todas las líneas del país, un archivo por mes
 - exportaciones_antioquia/expo_antioquia_AAAA.parquet    líneas de origen Antioquia o de exportadores antioqueños
@@ -7,7 +7,8 @@
 - validacion_mincit_nme.csv, validacion_madr_agricolas.csv, cobertura.json
 - docs/diccionario_transaccional.csv (columnas del parquet)
 
-Los archivos se parten por mes/año para que ninguno supere el límite de 100 MB de GitHub.
+Los archivos se parten por mes/año para poder leerlos por partes. No se versionan: lo que se publica es la BD
+depurada del paso 9, en datos/limpios/.
 """
 import json
 import argparse

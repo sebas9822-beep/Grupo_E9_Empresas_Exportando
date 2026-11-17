@@ -102,7 +102,7 @@ def socrata_json(dataset, params):
 
 def ruta_csv(ruta, interim):
     """Devuelve la ruta a un CSV; si solo existe la versión .zip (así quedan algunos en OneDrive),
-    la descomprime en data/interim/descomprimidos/."""
+    la descomprime en datos/intermedios/descomprimidos/."""
     ruta = Path(ruta)
     if ruta.exists():
         return ruta

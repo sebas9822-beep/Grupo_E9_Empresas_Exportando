@@ -1,23 +1,29 @@
 """Configuración central del proyecto Grupo E9 · Empresas exportando.
 
 Todas las rutas son relativas a la raíz del repositorio. Los datos crudos
-pesan ~1,5 GB y no se versionan: por defecto se descargan en data/raw/, pero
+pesan ~1,5 GB y no se versionan: por defecto se descargan en datos/originales/, pero
 si ya los tienes (por ejemplo en la carpeta "Datos descargados" de OneDrive)
 puedes apuntar a ellos con la variable de entorno EXPO_RAW_DIR:
 
     Windows (PowerShell):  $env:EXPO_RAW_DIR = "C:\\...\\BD internacional\\Datos descargados"
     Linux / macOS:         export EXPO_RAW_DIR="/ruta/a/Datos descargados"
 
-data/raw/ usa las mismas subcarpetas que esa carpeta, así que sirve tal cual.
+datos/originales/ usa las mismas subcarpetas que esa carpeta, así que sirve tal cual.
+
+Las carpetas siguen la plantilla del curso (Estud-IA · Análisis de Datos Básico):
+    datos/originales/   datos tal como se descargaron (no se modifican; solo se versiona una muestra)
+    datos/intermedios/  todo lo regenerable, incluidos los productos de los pasos 7 y 8 (no se versiona)
+    datos/limpios/      la BD depurada del paso 9 y sus exportaciones (sí se versiona)
 """
 import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-DATA = ROOT / "data"
-RAW = Path(os.environ.get("EXPO_RAW_DIR", DATA / "raw"))
-INTERIM = DATA / "interim"          # intermedios regenerables (no se versionan)
-PROCESSED = DATA / "processed"      # productos finales (sí se versionan)
+DATA = ROOT / "datos"
+RAW = Path(os.environ.get("EXPO_RAW_DIR", DATA / "originales"))
+INTERIM = DATA / "intermedios"                 # intermedios regenerables (no se versionan)
+PROCESSED = INTERIM / "productos_paso7"        # productos de los pasos 7 y 8: insumo del paso 9 (no se versionan)
+LIMPIOS = DATA / "limpios"                     # datos limpios del paso 9 (sí se versionan)
 DOCS = ROOT / "docs"
 
 # Subcarpetas de datos crudos (idénticas a la carpeta "Datos descargados")
@@ -33,10 +39,12 @@ INTERIM_MENSUAL = INTERIM / "mensual"
 DUCKDB_PATH = INTERIM / "expo.duckdb"
 NITS_PATH = INTERIM / "nits_exportadores.csv"
 
-# Productos finales
+# Productos de los pasos 7 y 8 (intermedios)
 OUT_NACIONAL = PROCESSED / "exportaciones_nacional"     # un parquet por mes
 OUT_ANTIOQUIA = PROCESSED / "exportaciones_antioquia"   # un parquet por año
-OUT_BD_DEPURADA = PROCESSED / "bd_depurada"            # BD única depurada (paso 9): parquet por tabla
+
+# Datos limpios (paso 9)
+OUT_BD_DEPURADA = LIMPIOS / "bd_depurada"              # BD única depurada: parquet por tabla
 BD_DEPURADA_DUCKDB = OUT_BD_DEPURADA / "BD_exportaciones_Colombia_depurada.duckdb"  # se arma localmente, no se versiona
 
 # Periodo de análisis (el fin se detecta con lo que haya publicado la DIAN)

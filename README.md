@@ -1,150 +1,110 @@
-# Grupo E9 · Empresas exportando
+# Empresas que exportan desde Antioquia
 
-Caso de uso de datos para **EstudIA (EAFIT)**: base actualizada de empresas que exportan desde Colombia, con foco en Antioquia, armada solo con fuentes oficiales abiertas.
+Equipo E9 · Análisis de Datos Básico · Estud-IA (Capa 2)
 
-Este repositorio une en un solo proceso las dos búsquedas del proyecto:
+> **Fuente real y pública:** los datos salen de las bases de exportaciones de la DIAN y de otras fuentes oficiales abiertas. No son datos sintéticos. Lo que todavía falta confirmar en equipo está marcado como **PENDIENTE**.
 
-1. **Primera búsqueda:** DIAN, RUES, Supersociedades y DIVIPOLA. Da quién exporta, cuánto, qué, a dónde y dónde está domiciliada cada empresa.
-2. **Segunda búsqueda:** MinCIT, MinAgricultura y SECOP II. Da el sector de cada exportación (minero-energético, agrícola o industria), el producto agrícola y si la empresa contrata con el Estado.
+## Ficha del proyecto · versión 1
 
-## Qué hay (cobertura enero 2024 – septiembre 2026)
+### 1. Usuario y decisión
+> ¿Quién usará el resultado (una persona o un área) y qué va a decidir con él?
 
-| Producto | Detalle |
+**PENDIENTE:** confirmar en equipo quién es el usuario. Propuesta: un área que acompaña o atiende a empresas exportadoras de Antioquia (por ejemplo, una cámara de comercio o un área comercial). Con el resultado decide a qué empresas y sectores darles prioridad.
+
+### 2. Pregunta principal
+> Una sola pregunta que ayude a tomar esa decisión.
+
+¿Qué empresas antioqueñas exportan, qué productos venden y a qué países, y cómo cambió eso entre 2024 y 2026?
+
+**PENDIENTE:** ajustarla cuando se confirme el usuario (punto 1).
+
+### 3. Fuente de datos
+> Enlace o nombre de la fuente. ¿Es pública o es una muestra de práctica inventada (sintética)? Si es inventada, dilo aquí.
+
+Pública. La base principal son las [bases estadísticas de exportaciones de la DIAN](https://www.dian.gov.co/dian/cifras/Paginas/Bases-Estadisticas-de-Comercio-Exterior-Importaciones-y-Exportaciones.aspx), un archivo por mes. Se completa con datos abiertos del RUES (cámaras de comercio), Supersociedades, SECOP II, MinAgricultura, MinCIT y DIVIPOLA. La lista con enlaces está en [docs/fuentes.md](docs/fuentes.md).
+
+En `datos/originales/` hay una muestra de 1.000 filas de la DIAN; los archivos completos pesan 1,5 GB y no se suben.
+
+### 4. Qué representa una fila
+> Completa la frase: «Cada fila es…». ¿Qué campo distingue una fila de otra?
+
+Cada fila de la tabla de hechos es **un ítem de una declaración de exportación**: una subpartida (producto) que un exportador despachó en una declaración. La distingue `ID_REGISTRO`, que se asignó en la limpieza, porque la DIAN no trae una llave única: formulario + serie a veces se repite y 1.690 líneas no tienen formulario.
+
+En el directorio (`dim_exportador`), cada fila es una empresa y la distingue el `NIT`.
+
+### 5. Periodo
+> ¿Qué fechas cubren los datos?
+
+De enero de 2024 a septiembre de 2026 (33 meses). El año 2026 está incompleto: la DIAN publica cada mes unos 35 días después del cierre.
+
+### 6. Cuatro indicadores
+> Nombre de cada indicador y, si ya puedes, cómo se calcula (qué se divide entre qué).
+
+1. **Valor exportado (FOB)** = suma de `VALOR_FOB_USD`, en dólares.
+2. **Empresas exportadoras** = número de NIT distintos que exportaron al menos USD 1.000 FOB en el año (el umbral que usa Analdex).
+3. **Participación de Antioquia** = FOB de mercancía de origen Antioquia ÷ FOB nacional.
+4. **Peso no minero-energético** = FOB sin petróleo, carbón, oro, ferroníquel ni demás minerales ÷ FOB total.
+
+### 7. Fuera de alcance
+> Lo que este proyecto NO va a responder.
+
+- Exportación de **servicios** (software, consultoría, turismo): no pasa por aduana y no está en la DIAN.
+- Rentabilidad, márgenes, empleo o ventas totales de las empresas.
+- Las **personas naturales**: la DIAN no publica su documento, así que no entran al directorio.
+- Importaciones y pronósticos.
+
+## Comparaciones, riesgos y mapa de preguntas
+
+### Dos comparaciones útiles
+1. Por año: 2024, 2025 y 2026, comparando los mismos meses (enero a septiembre).
+2. Por sector: minero-energético, agrícola e industria. También por vínculo de la empresa con Antioquia (A: domicilio en Antioquia; B: mercancía principalmente antioqueña).
+
+### Tres riesgos de calidad
+1. **La dirección del exportador en la DIAN suele ser la de su agencia de aduanas**: una sola dirección de Bogotá aparece en 1.183 NIT. Por eso el domicilio se toma del RUES (cámara de comercio).
+2. **La DIAN cambia formatos entre archivos.** En septiembre de 2024 ocultó la razón social de 3.927 empresas, y en 2025 cambió los códigos de país. Cada regla quedó en la [bitácora](bitacora.md). Si la fuente falla o un mes viene mal, los totales se comparan con MinCIT, que cuadra trimestre a trimestre.
+3. **Envíos que no salen del país**: USD 2.616 M van a zonas francas colombianas, y 2026 está incompleto. Se marcan con `ES_DESTINO_ZONA_FRANCA` y los años se comparan en los mismos meses.
+
+### Mapa de preguntas
+- **¿Qué pasó?** Cuánto exportaron las empresas antioqueñas y cuántas exportaron, por año y por sector.
+- **¿Dónde o cuándo es distinto?** Por sector, producto, país de destino y subregión (cámara de comercio).
+- **¿Qué recomendaría y con qué límites?** Qué empresas y sectores priorizar. Límites: solo bienes, sin rentabilidad y sin personas naturales.
+
+## Cifra de control
+
+- **Tabla de hechos:** 3.613.237 líneas por USD 142.059,8 M FOB. Por año: 2024 USD 49.556,5 M; 2025 USD 50.201,5 M; 2026 (enero a septiembre) USD 42.301,8 M. El total coincide con la cifra oficial de MinCIT en todos los trimestres; la mayor diferencia es 0,01 %.
+- **Directorio:** 13.305 empresas. De ellas, 3.195 son exportadores antioqueños: 2.875 con domicilio en Antioquia (A) y 320 con mercancía principalmente antioqueña (B).
+- **Personas naturales:** 16.714 líneas por USD 247,6 M. Empresas más personas naturales dan el total.
+- **Muestra:** 1.000 filas, 995 de empresas y 5 de personas naturales.
+
+Las consultas que dan estas cifras están en [consultas/](consultas/).
+
+## Archivos del proyecto
+
+| Archivo o carpeta | Qué contiene |
 |---|---|
-| `data/processed/exportaciones_nacional/` | **3.613.237 líneas** de declaración de todo el país (un parquet por mes, 99 columnas) |
-| `data/processed/exportaciones_antioquia/` | **1,03 millones de líneas**: mercancía de origen Antioquia y exportadores antioqueños (un parquet por año) |
-| `data/processed/directorio_exportadores_antioquenos.xlsx` / `.csv` | **3.195 empresas** antioqueñas (vínculo A: 2.875; B: 320), una fila por NIT. Trae FOB por año, sector, productos, países, cámara de comercio, CIIU, Supersociedades y SECOP II |
-| `data/processed/directorio_exportadores_nacional.csv` | **13.305 exportadores** del país (personas jurídicas) |
-| `data/processed/serie_mensual_antioquia.csv` | FOB y número de exportadores por mes |
-| `data/processed/validacion_*.csv` | Comparación con MinCIT y MinAgricultura |
-| `data/processed/cobertura.json` | Periodo cubierto, totales y fecha de proceso |
-| `data/processed/bd_depurada/` | **BD única depurada** (paso 9): modelo estrella con tabla de hechos limpia (un parquet por mes), directorio, dimensiones, vistas de análisis, diccionario y log de limpieza. Se arma en un solo archivo DuckDB con `python crear_bd_depurada.py`. Ver [docs/limpieza_bd_depurada.md](docs/limpieza_bd_depurada.md) |
+| [diccionario.md](diccionario.md) | Qué significa cada columna: muestra original, tabla de hechos y directorio |
+| [bitacora.md](bitacora.md) | Decisiones y por qué, reglas de limpieza y uso de IA |
+| `datos/originales/` | Muestra de 1.000 filas de la DIAN tal como se descargó (no se modifica) |
+| `datos/limpios/` | BD depurada en parquet, directorio antioqueño (CSV y Excel), serie mensual y validaciones |
+| `consultas/` | Consultas SQL comentadas, con su cifra de control (sesión 3) |
+| `notebooks/` | Cuaderno de Colab: consultas sobre la muestra y sobre la BD depurada (sesiones 3 a 5) |
+| `tablero/` | Capturas y enlace del tablero (sesión 6) |
+| `docs/` | Metodología, fuentes, limpieza detallada y cómo correr el proceso completo |
+| `pipeline/`, `run_pipeline.py`, `crear_bd_depurada.py`, `config.py`, `requirements.txt` | Código que descarga, une y limpia los datos (avanzado; ver [docs/pipeline.md](docs/pipeline.md)) |
 
-## Empezar sin correr nada
+## Cómo empezar
 
-```python
-import pandas as pd
+- **Sin instalar nada:** abre el cuaderno en Colab desde [notebooks/01_consultas.ipynb](https://colab.research.google.com/github/sebas9822-beep/Grupo_E9_Empresas_Exportando/blob/main/notebooks/01_consultas.ipynb).
+- **En Excel:** descarga `datos/limpios/directorio_exportadores_antioquenos.xlsx`.
+- **La BD completa en tu computador:** `pip install -r requirements.txt` y luego `python crear_bd_depurada.py`. Arma un archivo DuckDB de unos 270 MB en menos de un minuto. Empieza por la vista `vw_exportaciones`.
 
-# Antioquia completa: ~1,2 GB en memoria con dtype_backend="pyarrow"
-ant = pd.read_parquet("data/processed/exportaciones_antioquia/", dtype_backend="pyarrow")
+## Reglas del repositorio
 
-# Nacional: 99 columnas x 3,6 M filas no caben en un portátil común; carga solo las columnas que necesites
-nac = pd.read_parquet("data/processed/exportaciones_nacional/", dtype_backend="pyarrow",
-                      columns=["PERIODO", "NIT", "SUBPARTIDA_10D", "PAIS_DESTINO_NORM", "VALOR_FOB_USD",
-                               "SECTOR_EXPORTACION", "ORIGEN_MERCANCIA_ANTIOQUIA", "NIT_EMPRESA_ANTIOQUENA"])
+- Es **público**: nada de datos personales (nombres, cédulas, teléfonos, correos, direcciones), contraseñas ni llaves. Por eso no se publican el nombre ni el domicilio del comprador en el exterior, que puede ser una persona, ni la dirección de las personas naturales.
+- Lo que está en `datos/originales/` no se modifica: se guarda tal como se descargó.
+- Lo que está en `datos/limpios/` se produce con código (`pipeline/` o `notebooks/`), nunca a mano.
+- Cada commit dice en su mensaje **qué** se decidió y **por qué**.
 
-directorio = pd.read_csv("data/processed/directorio_exportadores_antioquenos.csv", dtype={"NIT": str})
+---
 
-# Empresas antioqueñas (definición estricta), sin exportaciones minero-energéticas
-nme = ant[ant.NIT_EMPRESA_ANTIOQUENA & ~ant.ES_MINERO_ENERGETICO]
-```
-
-**BD depurada en un solo archivo.** Arma el DuckDB (~1 minuto, ~340 MB) y consulta con nombres en vez de códigos:
-
-```python
-# en la terminal: python crear_bd_depurada.py
-import duckdb
-con = duckdb.connect("data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb", read_only=True)
-con.sql("""SELECT PAIS_DESTINO, round(sum(VALOR_FOB_USD)/1e6,1) AS fob_musd FROM vw_exportaciones
-           WHERE ES_EXPORTADOR_ANTIOQUENO AND ANIO = 2025 AND NOT ES_DESTINO_ZONA_FRANCA
-           GROUP BY 1 ORDER BY 2 DESC LIMIT 10""").show()
-```
-
-Con DuckDB también puedes consultar la base nacional sin cargarla en memoria:
-
-```python
-import duckdb
-duckdb.sql("""SELECT PAIS_DESTINO_NORM, round(sum(VALOR_FOB_USD)/1e6,1) AS fob_musd
-              FROM 'data/processed/exportaciones_antioquia/*.parquet'
-              WHERE ANIO = 2025 GROUP BY 1 ORDER BY 2 DESC LIMIT 10""").show()
-```
-
-## Estructura del repositorio
-
-```
-├── config.py                  rutas, periodo y reglas (cámaras de Antioquia, definición minero-energética)
-├── run_pipeline.py            corre todo el proceso o un tramo
-├── crear_bd_depurada.py       arma la BD depurada (.duckdb) desde data/processed/bd_depurada/
-├── requirements.txt
-├── pipeline/
-│   ├── comun.py               descargas, API de datos.gov.co, dígito de verificación
-│   ├── p01_descargar_dian.py              bases mensuales, directorio y documentación DIAN
-│   ├── p02_descargar_datos_abiertos.py    RUES Antioquia, Supersociedades, DIVIPOLA, cámaras, MinCIT, MinAgricultura
-│   ├── p03_convertir_dian.py              .zip/.xlsx mensuales → parquet
-│   ├── p04_consolidar.py                  una sola tabla DuckDB + lista de NIT
-│   ├── p05_descargar_por_nit.py           RUES nacional y SECOP II por NIT (incremental)
-│   ├── p06_directorio.py                  directorio por empresa (une las dos búsquedas)
-│   ├── p07_exportar.py                    productos finales, validaciones, cobertura
-│   ├── p08_excel.py                       Excel formateado
-│   ├── p09_bd_depurada.py                 BD única depurada: limpieza, modelo estrella, validación
-│   └── diccionario_bd_depurada.py         descripción de cada columna de la BD depurada
-├── data/
-│   ├── raw/          datos crudos (~1,5 GB, no se versionan; ver data/raw/README.md)
-│   ├── interim/      intermedios regenerables (no se versionan)
-│   └── processed/    productos finales (sí se versionan)
-│       └── bd_depurada/   tablas de la BD depurada en parquet (el .duckdb se arma localmente)
-└── docs/
-    ├── metodologia.md            definiciones, validación, problemas de calidad y limitaciones
-    ├── fuentes.md                fuentes usadas y descartadas
-    ├── diccionario_directorio.csv
-    ├── diccionario_transaccional.csv
-    ├── limpieza_bd_depurada.md   qué se limpió en la BD depurada y por qué
-    ├── diccionario_bd_depurada.csv
-    ├── log_bd_depurada.csv       cada regla de limpieza con filas y FOB afectados
-    └── referencias/              ficha técnica DIAN y correlativa de países
-```
-
-## Reproducir o actualizar
-
-```bash
-pip install -r requirements.txt
-python run_pipeline.py                 # descarga todo y procesa (~30-40 min la primera vez)
-```
-
-**Si ya tienes los datos crudos**, por ejemplo en la carpeta *Datos descargados* de OneDrive, no hace falta volver a descargarlos:
-
-```powershell
-$env:EXPO_RAW_DIR = "C:\Users\...\EstudIA\fuente de datos\BD internacional\Datos descargados"
-python run_pipeline.py --sin-descargas
-```
-
-**Cuando la DIAN publique un mes nuevo** (unos 35 días después del cierre), basta con correr `python run_pipeline.py`. El paso 1 baja solo los meses que faltan, el paso 3 convierte solo lo nuevo y el paso 5 consulta solo los NIT nuevos.
-
-| Paso | Qué hace | Búsqueda |
-|---|---|---|
-| 1 | Descarga DIAN: bases mensuales, directorio anual, ficha técnica | 1 |
-| 2 | Descarga datos.gov.co: RUES Antioquia, Supersociedades, DIVIPOLA, cámaras / MinCIT NME, MinAgricultura | 1 y 2 |
-| 3 | Convierte los .xlsx mensuales a parquet | 1 |
-| 4 | Consolida en DuckDB, normaliza subpartida y país, corrige el enmascaramiento de septiembre de 2024 | 1 |
-| 5 | Consulta por NIT: RUES (domicilio) y SECOP II (contratos con el Estado) | 1 y 2 |
-| 6 | Directorio: vínculo con Antioquia, sector, Supersociedades, SECOP | 1 y 2 |
-| 7 | Exporta parquet, CSV, serie, validaciones y diccionario | — |
-| 8 | Excel | — |
-| 9 | BD única depurada: hechos limpios, directorio recalculado, dimensiones, vistas y validación | — |
-
-## Cómo se define "empresa antioqueña"
-
-La dirección del exportador en la base DIAN muchas veces es la de la agencia de aduanas. Por eso **el domicilio se toma del RUES**: es la cámara de comercio de la matrícula principal.
-
-- **A. Empresa antioqueña:** está matriculada en una cámara de Antioquia.
-- **B.** Su domicilio está fuera, pero su mercancía viene principalmente de Antioquia.
-- **C.** Solo parte de su mercancía es antioqueña.
-- **D.** No tiene relación con Antioquia.
-
-El detalle está en [docs/metodologia.md](docs/metodologia.md).
-
-## Validación
-
-| Comparación | Resultado |
-|---|---|
-| Total trimestral contra MinCIT (2024-T1 a 2026-T2) | Igual al millón de dólares; la mayor diferencia es 0,01 % |
-| Serie no minero-energética contra MinCIT | Diferencia menor a 0,25 % por trimestre |
-| Exportaciones agrícolas contra MinAgricultura | Igual a nivel nacional; Antioquia, diferencia menor a 1,1 % |
-| Origen Antioquia 2025 contra Analdex | USD 10.786 M en ambos |
-| Exportadores antioqueños 2024 (≥ USD 1.000) | 2.316 (A+B), frente a 2.395 de Analdex con datos de Legiscomex |
-
-**Problema de calidad detectado:** en la base de septiembre de 2024 la DIAN ocultó la razón social de casi todas las empresas (USD 4.102 M). El pipeline las recupera por el NIT; el detalle está en la metodología.
-
-## Fuentes y uso
-
-Todas las fuentes son datos abiertos del Estado colombiano (Ley 1712 de 2014): DIAN, Confecámaras (RUES), Supersociedades, DANE, MinCIT, MinAgricultura y Colombia Compra Eficiente. La lista con enlaces está en [docs/fuentes.md](docs/fuentes.md). No se guardan datos personales: la DIAN anonimiza a las personas naturales, y del RUES y de SECOP II solo se toman datos de las empresas.
+Proyecto desarrollado en Estud-IA · Capa 2 · Análisis de Datos.
