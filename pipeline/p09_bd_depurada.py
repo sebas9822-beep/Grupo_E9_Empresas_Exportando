@@ -1,21 +1,27 @@
 """Paso 9 · BD única depurada (modelo estrella) a partir de los productos del paso 7.
 
-Entradas (data/processed/):
+Entradas (datos/intermedios/productos_paso7/, salida del paso 7):
   exportaciones_nacional/*.parquet          líneas DIAN (base de todo)
   directorio_exportadores_nacional.csv      atributos externos por NIT (RUES, Supersociedades, SECOP)
   tabla_subpartidas_sector.csv              sector de cada subpartida
   validacion_mincit_nme.csv / validacion_madr_agricolas.csv   cifras oficiales para validar
-Salidas:
-  data/processed/bd_depurada/hechos_exportaciones/hechos_AAAA_MM.parquet   tabla de hechos, un archivo por mes
-  data/processed/bd_depurada/<tabla>.parquet                               dimensiones, catálogos, log, diccionario
-  data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb     todo en un archivo (no se versiona)
+Salidas (datos/limpios/, se versionan salvo el .duckdb):
+  bd_depurada/hechos_exportaciones/hechos_AAAA_MM.parquet   tabla de hechos, un archivo por mes
+  bd_depurada/<tabla>.parquet                               dimensiones, catálogos, log, diccionario
+  bd_depurada/BD_exportaciones_Colombia_depurada.duckdb     todo en un archivo (no se versiona)
+  directorio_exportadores_antioquenos.csv / .xlsx, serie_mensual_antioquia.csv, validacion_*.csv, cobertura.json
   docs/diccionario_bd_depurada.csv, docs/log_bd_depurada.csv
+
+El repositorio es público: no se publican nombres ni direcciones de personas. Por eso la tabla de hechos no
+lleva la razón social ni el domicilio del destinatario en el exterior (puede ser una persona) y deja vacía la
+dirección declarada de las personas naturales.
 
 Las reglas de limpieza están explicadas en docs/limpieza_bd_depurada.md. Quien clone el repositorio puede
 armar el .duckdb sin correr este paso: python crear_bd_depurada.py
 """
 import argparse
 import datetime
+import json
 import pathlib
 import shutil
 import sys
@@ -23,11 +29,12 @@ import sys
 import duckdb
 import pandas as pd
 import pycountry
+from openpyxl.styles import Font
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 import config as C  # noqa: E402
 import crear_bd_depurada  # noqa: E402
-from pipeline import diccionario_bd_depurada  # noqa: E402
+from pipeline import diccionario_bd_depurada, diccionario_md  # noqa: E402
 from pipeline.comun import log  # noqa: E402
 
 N = C.OUT_NACIONAL / "*.parquet"
@@ -143,11 +150,9 @@ def main():
       (nit_limpio(NIT_EXPORTADOR) IS NULL) AS ES_PERSONA_NATURAL,
       (nit_limpio(NIT_EXPORTADOR) IS NOT NULL AND (RAZON_SOCIAL_EXPORTADOR IS NULL OR RAZON_SOCIAL_EXPORTADOR = 'PERSONA NATURAL')) AS FLAG_RAZON_SOCIAL_ENMASCARADA,
       CLASE_EXPORTADOR, TIPO_USUARIO,
-      limpia_nulo(upper(DIREC_EXPORTADOR)) AS DIRECCION_DECLARADA,
+      CASE WHEN nit_limpio(NIT_EXPORTADOR) IS NOT NULL THEN limpia_nulo(upper(DIREC_EXPORTADOR)) END AS DIRECCION_DECLARADA,
       COD_MPIO_DIRECCION_DECLARADA, DIRECCION_DECLARADA_EN_ANTIOQUIA,
       nit_limpio(NIT_DECLARANTE) AS NIT_DECLARANTE,
-      html_unescape(sin_comillas(limpia_nulo(RAZON_SOCIAL_DESTINATARIO))) AS RAZON_SOCIAL_DESTINATARIO,
-      html_unescape(limpia_nulo(DOMICILIO_DESTINATARIO)) AS DOMICILIO_DESTINATARIO,
       upper(html_unescape(limpia_nulo(CIUDAD_DESTINATARIO))) AS CIUDAD_DESTINATARIO,
       CASE WHEN {ZF} THEN 'XCF' ELSE COD_PAIS_DESTINO_ALF END AS COD_PAIS_DESTINO,
       {ZF} AS ES_DESTINO_ZONA_FRANCA,
@@ -191,6 +196,12 @@ def main():
             'esas empresas pierden septiembre de 2024 en el directorio. Las líneas quedan marcadas con FLAG_RAZON_SOCIAL_ENMASCARADA.')
     r = one("SELECT count(*), sum(VALOR_FOB_USD) FROM s WHERE nit_limpio(NIT_EXPORTADOR) IS NULL")
     reg_log('3. Exportador', 'NIT sin dígito de verificación ni ceros a la izquierda; el NIT "0" o vacío de las personas naturales queda en NULL', r[0], r[1])
+    r = one("""SELECT count(*) FILTER (WHERE limpia_nulo(RAZON_SOCIAL_DESTINATARIO) IS NOT NULL OR limpia_nulo(DOMICILIO_DESTINATARIO) IS NOT NULL),
+                      count(*) FILTER (WHERE nit_limpio(NIT_EXPORTADOR) IS NULL AND limpia_nulo(DIREC_EXPORTADOR) IS NOT NULL) FROM s""")
+    reg_log('3. Datos personales', 'El repositorio es público: se retiran la razón social y el domicilio del destinatario en el exterior, y se deja vacía la dirección declarada de las personas naturales', r[0], None,
+            f'El destinatario puede ser una persona (hay compradores registrados con nombre y apellidos). Se conservan su ciudad y su país. '
+            f'Líneas con nombre o domicilio de destinatario retirados: {fmt(r[0])}; líneas de personas naturales con dirección: {fmt(r[1])}. '
+            'Regla de la plantilla del curso: nada de nombres, cédulas, teléfonos, correos ni direcciones de personas.')
     r = one(f"SELECT count(*), sum(VALOR_FOB_USD) FROM s WHERE {ZF}")
     reg_log('4. Destino', 'Zonas francas colombianas como destino: código XCF, bandera ES_DESTINO_ZONA_FRANCA y zona franca específica (dim_zona_franca)', r[0], r[1],
             f'En la entrada, PAIS_DESTINO_NORM ponía "ZFP de Rionegro S.A." a todas las zonas francas (31 distintas) y {n_zf_mal} líneas de zona franca venían con código de Puerto Rico (PRI).')
@@ -449,14 +460,15 @@ def main():
     info = [
         ('Nombre', f'BD de exportaciones de Colombia depurada ({anios[0]}-01 a {ult_anio}-{ult_mes:02d})'),
         ('Fecha de construcción', datetime.date.today().isoformat()),
-        ('Construida con', 'pipeline/p09_bd_depurada.py a partir de data/processed (paso 7); el .duckdb se arma con crear_bd_depurada.py'),
+        ('Construida con', 'pipeline/p09_bd_depurada.py a partir de los productos del paso 7; el .duckdb se arma con crear_bd_depurada.py'),
+        ('Datos personales', 'No incluye nombres ni direcciones de personas: sin razón social ni domicilio del destinatario, y sin dirección de las personas naturales'),
         ('Fuente principal', 'DIAN: bases estadísticas de exportaciones (archivos mensuales)'),
         ('Fuentes de enriquecimiento', 'RUES Confecámaras, Supersociedades (10.000 empresas), SECOP II, MinAgricultura, MinCIT NME, DIVIPOLA. Ver docs/fuentes.md'),
         ('Granularidad de hechos', 'Una fila por serie (ítem) de declaración de exportación'),
         ('Cómo empezar', 'SELECT * FROM vw_exportaciones (todo con nombres) · dim_exportador (directorio) · vw_directorio_antioquia · vw_serie_mensual'),
         ('Validación', 'FOB trimestral igual a la cifra oficial de MinCIT y FOB agrícola nacional igual a MinAgricultura (vw_validacion_mincit, vw_validacion_madr)'),
         ('Advertencia', 'La dirección declarada a la DIAN suele ser la de la agencia de aduanas; para domicilio usar CAMARA_COMERCIO (RUES) o VINCULO_ANTIOQUIA.'),
-        ('Documentación', 'docs/limpieza_bd_depurada.md y docs/diccionario_bd_depurada.csv'),
+        ('Documentación', 'README.md (ficha), diccionario.md, bitacora.md y docs/limpieza_bd_depurada.md'),
     ]
     reg('info_df', pd.DataFrame(info, columns=['CLAVE', 'VALOR']))
     c.execute("CREATE TABLE info_bd AS SELECT * FROM info_df")
@@ -489,6 +501,39 @@ def main():
     TRABAJO.unlink(missing_ok=True)
     log(f"Parquet de la BD depurada en {out}")
     crear_bd_depurada.construir(out, C.BD_DEPURADA_DUCKDB)
+    exportar_archivos_simples(C.BD_DEPURADA_DUCKDB, C.LIMPIOS)
+    log(f"Diccionario: {diccionario_md.escribir(C.BD_DEPURADA_DUCKDB, C.ROOT / 'diccionario.md')}")
+
+
+def exportar_archivos_simples(bd, destino):
+    """Copias en CSV/Excel de lo más consultado, para abrir en Excel o cargar en Colab con un enlace de GitHub."""
+    con = duckdb.connect(str(bd), read_only=True)
+    ant = con.sql("SELECT * FROM vw_directorio_antioquia").df()
+    ant.to_csv(destino / "directorio_exportadores_antioquenos.csv", index=False, encoding="utf-8-sig")
+    with pd.ExcelWriter(destino / "directorio_exportadores_antioquenos.xlsx", engine="openpyxl") as w:
+        ant.to_excel(w, sheet_name="Exportadores_antioquenos", index=False)
+        con.sql("SELECT * FROM vw_serie_mensual").df().to_excel(w, sheet_name="Serie_mensual", index=False)
+        con.sql("SELECT COLUMNA, TIPO, DESCRIPCION, ORIGEN_O_REGLA FROM diccionario_datos WHERE TABLA = 'dim_exportador'").df() \
+            .to_excel(w, sheet_name="Diccionario", index=False)
+        for ws in w.book.worksheets:
+            ws.freeze_panes = "A2"
+            ws.auto_filter.ref = ws.dimensions
+            for celda in ws[1]:
+                celda.font = Font(bold=True)
+            for col in ws.columns:
+                ws.column_dimensions[col[0].column_letter].width = 18
+    con.sql("SELECT * FROM vw_serie_mensual").df().to_csv(destino / "serie_mensual_antioquia.csv", index=False)
+    con.sql("SELECT * FROM vw_validacion_mincit").df().to_csv(destino / "validacion_mincit_nme.csv", index=False)
+    con.sql("SELECT * FROM vw_validacion_madr").df().to_csv(destino / "validacion_madr_agricolas.csv", index=False)
+    n, fob, desde, hasta = con.execute("SELECT count(*), sum(VALOR_FOB_USD), strftime(min(PERIODO), '%Y-%m'), strftime(max(PERIODO), '%Y-%m') FROM hechos_exportaciones").fetchone()
+    emp, ant_ab, ant_a = con.execute("SELECT count(*), count(*) FILTER (WHERE ES_EXPORTADOR_ANTIOQUENO), count(*) FILTER (WHERE EMPRESA_ANTIOQUENA) FROM dim_exportador").fetchone()
+    cobertura = {"fecha_proceso": datetime.date.today().isoformat(), "periodo_desde": desde, "periodo_hasta": hasta,
+                 "lineas_nacional": n, "fob_usd_total": round(fob, 2), "exportadores_personas_juridicas": emp,
+                 "exportadores_antioquenos_A_B": ant_ab, "empresas_antioquenas_A": ant_a,
+                 "nota": f"El año {hasta[:4]} llega solo hasta {hasta}."}
+    (destino / "cobertura.json").write_text(json.dumps(cobertura, ensure_ascii=False, indent=2), encoding="utf-8")
+    con.close()
+    log(f"Archivos simples en {destino}")
 
 
 if __name__ == "__main__":

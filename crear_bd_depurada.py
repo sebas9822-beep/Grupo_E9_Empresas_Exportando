@@ -1,16 +1,16 @@
-"""Arma la BD única depurada (un solo archivo DuckDB) a partir de los parquet versionados en data/processed/bd_depurada/.
+"""Arma la BD única depurada (un solo archivo DuckDB) a partir de los parquet versionados en datos/limpios/bd_depurada/.
 
-    python crear_bd_depurada.py                       # crea data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb
+    python crear_bd_depurada.py                       # crea datos/limpios/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb
     python crear_bd_depurada.py --salida otra/ruta.duckdb
 
 No necesita descargar nada ni correr el pipeline: basta con clonar el repositorio. Tarda alrededor de un minuto.
 El archivo .duckdb no se versiona (pesa ~340 MB y GitHub no acepta archivos de más de 100 MB); por eso se
 reconstruye desde las tablas en parquet, que sí están en el repositorio. Las tablas y las reglas de limpieza
-están descritas en docs/limpieza_bd_depurada.md y docs/diccionario_bd_depurada.csv.
+están descritas en diccionario.md, bitacora.md y docs/limpieza_bd_depurada.md.
 
 Uso desde Python:
     import duckdb
-    con = duckdb.connect("data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb", read_only=True)
+    con = duckdb.connect("datos/limpios/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb", read_only=True)
     con.sql("SELECT * FROM vw_directorio_antioquia LIMIT 10").df()
 """
 import argparse
@@ -22,7 +22,7 @@ import duckdb
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import config as C  # noqa: E402
 
-# Tablas que se cargan (cada una es un parquet en data/processed/bd_depurada/, salvo los hechos, partidos por mes)
+# Tablas que se cargan (cada una es un parquet en datos/limpios/bd_depurada/, salvo los hechos, partidos por mes)
 TABLAS = ["dim_exportador", "dim_subpartida", "dim_pais", "dim_zona_franca", "dim_departamento", "dim_municipio",
           "dim_aduana", "dim_declarante", "catalogo_codigos", "ref_mincit_trimestral", "ref_madr_agricola_anual",
           "log_depuracion", "diccionario_datos", "info_bd"]

@@ -1,4 +1,4 @@
-"""Paso 8 · Excel para usuarios no técnicos: data/processed/directorio_exportadores_antioquenos.xlsx
+"""Paso 8 · Excel para usuarios no técnicos: datos/intermedios/productos_paso7/directorio_exportadores_antioquenos.xlsx (el directorio depurado sale en el paso 9)
 
 Hojas: Exportadores_antioquenos (A+B), Vinculo_parcial_Antioquia (C), Serie_mensual,
 Validacion_MinCIT, Validacion_MADR y Diccionario.

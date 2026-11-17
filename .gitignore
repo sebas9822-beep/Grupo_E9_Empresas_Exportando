@@ -1,9 +1,11 @@
-# Datos crudos (~1,5 GB): se regeneran con los pasos 1, 2 y 5 o se apuntan con EXPO_RAW_DIR
-data/raw/*
-!data/raw/README.md
+# Datos originales completos (~1,5 GB): se regeneran con los pasos 1, 2 y 5 o se apuntan con EXPO_RAW_DIR.
+# Solo se versionan el README y la muestra en CSV (regla de la plantilla del curso)
+datos/originales/*
+!datos/originales/README.md
+!datos/originales/muestra_*.csv
 
-# Intermedios regenerables
-data/interim/
+# Intermedios regenerables (incluye los productos de los pasos 7 y 8, insumo del paso 9)
+datos/intermedios/
 *.duckdb
 *.duckdb.wal
 .tmp/

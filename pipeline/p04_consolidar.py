@@ -1,4 +1,4 @@
-"""Paso 4 · Une los meses en una sola tabla DuckDB (data/interim/expo.duckdb) y deja la lista
+"""Paso 4 · Une los meses en una sola tabla DuckDB (datos/intermedios/expo.duckdb) y deja la lista
 de NIT exportadores (con dígito de verificación) para las consultas por NIT del paso 5.
 
 Agrega: municipio/departamento de la dirección declarada (DIVIPOLA), subpartida a 10 dígitos,

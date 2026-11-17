@@ -22,13 +22,11 @@ hechos_exportaciones,ES_PERSONA_NATURAL,BOOLEAN,"VERDADERO si el exportador no t
 hechos_exportaciones,FLAG_RAZON_SOCIAL_ENMASCARADA,BOOLEAN,"VERDADERO si la DIAN publicó ""PERSONA NATURAL"" o dejó vacía la razón social aunque la línea trae NIT de empresa (sep-2024). La línea se atribuye a la empresa por el NIT",Calculado
 hechos_exportaciones,CLASE_EXPORTADOR,VARCHAR,"Clase declarada: 1 economía mixta, 2 privada, 3 pública. Ver catalogo_codigos",DIAN
 hechos_exportaciones,TIPO_USUARIO,VARCHAR,"Código DIAN del tipo de usuario aduanero (sin descripción en la fuente; 36 = 99,9 % de los registros)",DIAN
-hechos_exportaciones,DIRECCION_DECLARADA,VARCHAR,Dirección del exportador declarada a la DIAN. OJO: muchas veces es la de la agencia de aduanas,DIAN DIREC_EXPORTADOR (limpia)
+hechos_exportaciones,DIRECCION_DECLARADA,VARCHAR,Dirección del exportador declarada a la DIAN. OJO: muchas veces es la de la agencia de aduanas. Vacía para personas naturales (dato personal),DIAN DIREC_EXPORTADOR (limpia)
 hechos_exportaciones,COD_MPIO_DIRECCION_DECLARADA,VARCHAR,Municipio DIVIPOLA (5 dígitos) de la dirección declarada. Llave hacia dim_municipio,DIAN COD_DPTO_EXPORTADOR (en realidad es el municipio)
 hechos_exportaciones,DIRECCION_DECLARADA_EN_ANTIOQUIA,BOOLEAN,VERDADERO si la dirección declarada está en Antioquia,Calculado (paso 4)
 hechos_exportaciones,NIT_DECLARANTE,VARCHAR,NIT de la agencia de aduanas o declarante. Llave hacia dim_declarante,DIAN
-hechos_exportaciones,RAZON_SOCIAL_DESTINATARIO,VARCHAR,Comprador o destinatario en el exterior,DIAN (limpia)
-hechos_exportaciones,DOMICILIO_DESTINATARIO,VARCHAR,Dirección del destinatario en el exterior,DIAN (limpia)
-hechos_exportaciones,CIUDAD_DESTINATARIO,VARCHAR,"Ciudad del destinatario, en mayúsculas","DIAN (limpia, entidades HTML decodificadas)"
+hechos_exportaciones,CIUDAD_DESTINATARIO,VARCHAR,"Ciudad del destinatario, en mayúsculas. Su razón social y su domicilio no se publican porque pueden ser de una persona","DIAN (limpia, entidades HTML decodificadas)"
 hechos_exportaciones,COD_PAIS_DESTINO,VARCHAR,"País destino final ISO 3166 alfa-3; ""XCF"" = zona franca colombiana. Llave hacia dim_pais",DIAN COD_PAIS_DESTINO_ALF (zonas francas corregidas)
 hechos_exportaciones,ES_DESTINO_ZONA_FRANCA,BOOLEAN,VERDADERO si la mercancía va a una zona franca en Colombia (no sale del país),Calculado
 hechos_exportaciones,COD_ZONA_FRANCA_DESTINO,VARCHAR,Código de la zona franca de destino. Llave hacia dim_zona_franca,DIAN COD_PAIS_DESTINO_NUM

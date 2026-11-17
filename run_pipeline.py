@@ -1,10 +1,10 @@
 """Corre el pipeline completo (o un tramo) de punta a punta.
 
     python run_pipeline.py                  # todo: descargas + procesamiento (~30-40 min la primera vez)
-    python run_pipeline.py --sin-descargas  # solo procesa lo que ya está en data/raw (o en EXPO_RAW_DIR)
+    python run_pipeline.py --sin-descargas  # solo procesa lo que ya está en datos/originales (o en EXPO_RAW_DIR)
     python run_pipeline.py --desde 6        # desde el paso 6 en adelante
     python run_pipeline.py --solo 7 8       # solo esos pasos
-    python run_pipeline.py --solo 9         # solo la BD depurada (requiere data/processed del paso 7)
+    python run_pipeline.py --solo 9         # solo la BD depurada (requiere los productos del paso 7 en datos/intermedios)
 
 Pasos:
   1 Descargar DIAN (bases mensuales, directorio, documentación)
@@ -13,9 +13,9 @@ Pasos:
   4 Consolidar en DuckDB y sacar la lista de NIT
   5 Consultar por NIT: RUES nacional y SECOP II
   6 Construir el directorio de empresas
-  7 Exportar productos finales y validaciones
+  7 Exportar productos intermedios y validaciones (datos/intermedios/productos_paso7)
   8 Generar el Excel
-  9 Construir la BD única depurada (modelo estrella en DuckDB + parquet en data/processed/bd_depurada)
+  9 Construir la BD única depurada (datos/limpios: modelo estrella en parquet + .duckdb local)
 """
 import argparse
 import runpy

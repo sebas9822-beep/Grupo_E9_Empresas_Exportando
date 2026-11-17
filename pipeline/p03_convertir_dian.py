@@ -1,4 +1,4 @@
-"""Paso 3 · Convierte cada base mensual DIAN (.zip con .xlsx) a parquet en data/interim/mensual/.
+"""Paso 3 · Convierte cada base mensual DIAN (.zip con .xlsx) a parquet en datos/intermedios/mensual/.
 
 Solo procesa los meses nuevos; con --forzar los rehace todos.
 """
