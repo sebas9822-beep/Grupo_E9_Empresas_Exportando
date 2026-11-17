@@ -45,7 +45,7 @@ Para cada NIT exportador se consultó el NIT con y sin dígito de verificación 
 | Exportadores antioqueños 2024 (≥ USD 1.000) | A+B = 2.316; Analdex reporta 2.395 con datos de Legiscomex |
 | FOB del directorio contra el total nacional | Cuadra exacto: total = FOB de empresas + FOB de personas naturales, en cada año |
 
-Las tablas completas están en `data/processed/validacion_*.csv` y en el Excel.
+Las tablas completas están en `datos/limpios/validacion_*.csv` y en las vistas `vw_validacion_*` de la BD depurada.
 
 ## 6. Problema de calidad en la base DIAN de septiembre de 2024
 
@@ -56,7 +56,7 @@ Sin esta corrección, en el directorio se pierde septiembre de 2024 de cada empr
 ## 7. Limitaciones
 
 - Las personas naturales no tienen NIT: no entran al directorio.
-- El año en curso está incompleto. `data/processed/cobertura.json` dice hasta qué mes llega.
+- El año en curso está incompleto. `datos/limpios/cobertura.json` dice hasta qué mes llega.
 - El RUES no trae municipio; la cámara de comercio sirve como aproximación de la subregión.
 - Supersociedades solo cubre las 10.000 empresas más grandes, y sus cifras vienen en billones de pesos con 2 decimales.
 - Hay 60 combinaciones repetidas de formulario y serie dentro de un mismo archivo. Se dejaron tal como las publica la DIAN.

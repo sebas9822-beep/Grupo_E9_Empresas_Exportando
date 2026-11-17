@@ -1,6 +1,6 @@
 # BD única depurada: qué se limpió y qué quedó
 
-El paso 9 del pipeline (`pipeline/p09_bd_depurada.py`) toma los productos del paso 7 y los convierte en **una sola base de datos consistente**, con un modelo estrella (una tabla de hechos y sus dimensiones), lista para analizar. Cubre enero de 2024 a septiembre de 2026.
+El paso 9 del pipeline (`pipeline/p09_bd_depurada.py`) toma los productos del paso 7 (que quedan en `datos/intermedios/`, sin subir) y los convierte en **una sola base de datos consistente**, con un modelo estrella (una tabla de hechos y sus dimensiones), lista para analizar. Cubre enero de 2024 a septiembre de 2026.
 
 - **Tabla de hechos:** 3.613.237 líneas de declaración, por USD 142.059,8 M FOB.
 - **Directorio:** 13.305 empresas. De ellas, 3.195 son exportadores antioqueños: 2.875 con vínculo A y 320 con vínculo B.
@@ -10,18 +10,18 @@ El detalle de cada regla, con las filas y el FOB que afectó, está en `docs/log
 
 ## 1. Cómo obtenerla
 
-El archivo DuckDB pesa unos 340 MB. GitHub no acepta archivos de más de 100 MB, así que no se versiona. Lo que sí está en el repositorio son sus tablas en parquet, en `data/processed/bd_depurada/`. Para armar la base en un solo archivo:
+El archivo DuckDB pesa unos 270 MB. GitHub no acepta archivos de más de 100 MB, así que no se versiona. Lo que sí está en el repositorio son sus tablas en parquet, en `datos/limpios/bd_depurada/`. Para armar la base en un solo archivo:
 
 ```bash
 pip install -r requirements.txt
-python crear_bd_depurada.py        # ~1 minuto → data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb
+python crear_bd_depurada.py        # ~1 minuto → datos/limpios/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb
 ```
 
 Para regenerarla desde los productos del paso 7, por ejemplo cuando la DIAN publique un mes nuevo: `python run_pipeline.py --solo 9`.
 
 ```python
 import duckdb
-con = duckdb.connect("data/processed/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb", read_only=True)
+con = duckdb.connect("datos/limpios/bd_depurada/BD_exportaciones_Colombia_depurada.duckdb", read_only=True)
 
 # Diez principales destinos de los exportadores antioqueños en 2025, sin contar envíos a zonas francas
 con.sql("""SELECT PAIS_DESTINO, round(sum(VALOR_FOB_USD)/1e6, 1) AS fob_musd
@@ -32,7 +32,7 @@ con.sql("""SELECT PAIS_DESTINO, round(sum(VALOR_FOB_USD)/1e6, 1) AS fob_musd
 directorio = con.sql("SELECT * FROM vw_directorio_antioquia").df()
 ```
 
-Sin DuckDB también se puede leer con pandas: `pd.read_parquet("data/processed/bd_depurada/hechos_exportaciones/")`.
+Sin DuckDB también se puede leer con pandas: `pd.read_parquet("datos/limpios/bd_depurada/hechos_exportaciones/")`.
 
 ## 2. Qué contiene
 
@@ -51,7 +51,7 @@ erDiagram
 
 | Objeto | Qué es | Filas |
 |---|---|---|
-| `hechos_exportaciones` | Una fila por serie (ítem) de declaración DIAN, depurada. 63 columnas | 3.613.237 |
+| `hechos_exportaciones` | Una fila por serie (ítem) de declaración DIAN, depurada. 61 columnas | 3.613.237 |
 | `dim_exportador` | Directorio por NIT: RUES, Supersociedades, SECOP II, vínculo con Antioquia y cifras recalculadas | 13.305 |
 | `dim_subpartida` | Subpartida a 10 dígitos, capítulo, partida, SA6, sector y producto agrícola | 5.881 |
 | `dim_pais` | País destino y país de bandera con ISO 3166 alfa-3 | 215 |
@@ -73,6 +73,7 @@ erDiagram
 | 1 | Información repetida: `exportaciones_antioquia/` es un subconjunto exacto de `exportaciones_nacional/`, y cada línea repetía 12 columnas del directorio | Una sola tabla de hechos. Lo de Antioquia queda como vista y los atributos de la empresa en `dim_exportador` | 1.034.865 líneas que ya no se guardan dos veces |
 | 2 | En el archivo DIAN de **septiembre de 2024** la razón social de las empresas viene como "PERSONA NATURAL" o vacía, aunque la línea trae el NIT | Persona natural es la que **no tiene NIT** publicado; no se decide por la razón social. Esas líneas se atribuyen a la empresa y se marcan con `FLAG_RAZON_SOCIAL_ENMASCARADA` | 107.212 líneas de 3.927 NIT, USD 4.102,4 M |
 | 3 | El NIT viene con ceros a la izquierda y el de las personas naturales como "0" o vacío | NIT sin ceros a la izquierda; NULL para personas naturales (`ES_PERSONA_NATURAL`) | 16.714 líneas de personas naturales, USD 247,6 M |
+| 3b | **Datos personales**: el repositorio es público y el comprador en el exterior puede ser una persona (hay compradores registrados con nombre y apellidos) | Se retiran `RAZON_SOCIAL_DESTINATARIO` y `DOMICILIO_DESTINATARIO`; se conservan la ciudad y el país del comprador. La dirección declarada de las personas naturales queda vacía | 3.611.689 líneas sin nombre ni domicilio del comprador; 67 direcciones de personas naturales |
 | 4 | `PAIS_DESTINO_NORM` ponía **"ZFP de Rionegro S.A." a las 31 zonas francas** del país, y 2 líneas de zona franca venían con el código de Puerto Rico | Código `XCF` para zona franca colombiana, bandera `ES_DESTINO_ZONA_FRANCA` y la zona franca real en `dim_zona_franca` | 38.520 líneas, USD 2.616,3 M. En 281 empresas cambia el top 3 de destinos |
 | 5 | La DIAN cambió en 2025 la codificación de países y banderas: en 2024 usa ISO alfa-2, códigos numéricos propios y nombres en MAYÚSCULA; desde 2025, alfa-3, M49 y nombres en tipo oración | Un solo código ISO alfa-3 y un solo nombre por país (`dim_pais`). Se retiran las 7 columnas de país y bandera de la fuente | 1.302.673 líneas de 2024 homologadas |
 | 6 | Errores de digitación de la fuente | "Correción" → "Corrección", "despúes" → "después", "Unico" → "Único" | 1.030.911 líneas (más "Único" en todas) |
@@ -81,7 +82,7 @@ erDiagram
 | 9 | Ceros que significan "no aplica" (formulario, declaración anterior y precedente, NIT declarante) | Pasan a NULL | Afecta casi todas las líneas. Las 1.690 sin número de formulario (hidrocarburos) se conservan: suman cerca del 25 % del FOB |
 | 10 | Fechas guardadas como texto (AAAAMMDD, AAAAMM) | Pasan a tipo fecha | — |
 | 11 | Departamentos con varias grafías ("BOGOTA DC", "BOGOTÁ, D.C.") | Código DIVIPOLA y nombre oficial (`dim_departamento`) | — |
-| 12 | Columnas redundantes o vacías | Se retiran de la tabla de hechos: `FECHA_PROCESO` (= `PERIODO`), `TIPO_DECLARACION` (= `TIPO_DESPACHO`), códigos que repiten su descripción, `COD_USUARIO` (99,97 % vacío), `COD_LUGAR_SALIDA_NUM` (no es 1:1 con el lugar) y nombres que ahora viven en dimensiones | De 99 a 63 columnas, sin perder información |
+| 12 | Columnas redundantes o vacías | Se retiran de la tabla de hechos: `FECHA_PROCESO` (= `PERIODO`), `TIPO_DECLARACION` (= `TIPO_DESPACHO`), códigos que repiten su descripción, `COD_USUARIO` (99,97 % vacío), `COD_LUGAR_SALIDA_NUM` (no es 1:1 con el lugar) y nombres que ahora viven en dimensiones | De 99 a 61 columnas. Solo se pierden los dos campos de datos personales (fila 3b) |
 | 13 | Una empresa con varias razones sociales (por ejemplo "ECOPETROL S A" y "ECOPETROL S.A.") | Una razón social canónica, la más reciente de la DIAN; si nunca se publicó, la del RUES. Las variantes quedan en `NOMBRES_EN_FUENTE` | 332 NIT con varios nombres; 119 toman el nombre del RUES y 1 queda sin nombre |
 | 14 | Atributos externos en formatos distintos (CIIU "610" y "4620.00", fechas como texto) | CIIU a 4 dígitos, fechas, booleanos y números con su tipo | — |
 
@@ -89,6 +90,7 @@ erDiagram
 
 - **Filas idénticas:** hay 10 líneas idénticas en todo a otra (USD 39,6 M). Todas son de las que no tienen número de formulario, así que la DIAN no deja forma de distinguir los envíos. Se evaluó eliminarlas, pero con ellas el FOB trimestral cuadra con MinCIT y sin ellas 2025-T1 queda 0,28 % por debajo (un embarque de crudo de USD 33 M). Por eso **se conservan** y se marcan con `FLAG_REGISTRO_IDENTICO`. Para excluirlas: `WHERE NOT FLAG_REGISTRO_IDENTICO`.
 - **Zonas francas:** una exportación a zona franca no sale del país. Para analizar solo ventas al exterior, filtra con `NOT ES_DESTINO_ZONA_FRANCA`.
+- **Datos personales:** el repositorio es público, así que no se publican el nombre ni el domicilio del comprador. Si un análisis los necesita, están en los archivos originales de la DIAN, que no se suben.
 - **Domicilio:** la dirección declarada a la DIAN suele ser la de la agencia de aduanas. El vínculo con Antioquia sale del RUES, con la misma regla de `docs/metodologia.md`.
 - **Directorio:** se recalcula desde la tabla de hechos depurada. Frente al directorio del paso 7 no cambia ningún FOB ni ningún `VINCULO_ANTIOQUIA`; cambian los textos derivados del país (top 3 de destinos) por la corrección de zonas francas.
 
@@ -129,6 +131,7 @@ Para pasar código que usaba los parquet del paso 7:
 | `NUM_SOLICITUD_AUTO_EMBARQUE`, `FECHA_SOLICITUD_AUTO_EMBARQUE` | `NUM_AUTORIZACION_EMBARQUE`, `PERIODO_AUTORIZACION_EMBARQUE` |
 | `NUM__DECLA_EXPORTACION_ANT`, `FECH_DECLA_EXPORTACION_ANT` | `NUM_DECLARACION_ANTERIOR`, `PERIODO_DECLARACION_ANTERIOR` |
 | `RAZON_SOCIAL_ENMASCARADA` | `FLAG_RAZON_SOCIAL_ENMASCARADA` |
+| `RAZON_SOCIAL_DESTINATARIO`, `DOMICILIO_DESTINATARIO` | No se publican (datos personales); queda `CIUDAD_DESTINATARIO` |
 | `SECTOR_EXPORTACION`, `ES_MINERO_ENERGETICO`, `ES_AGRICOLA_MADR`, `PRODUCTO_AGRICOLA_MADR` | En `dim_subpartida` y en la vista |
 | `NIT_EMPRESA_ANTIOQUENA`, `NIT_ES_EXPORTADOR_ANTIOQUENO`, `NIT_VINCULO_ANTIOQUIA`, `NIT_*` | `EMPRESA_ANTIOQUENA`, `ES_EXPORTADOR_ANTIOQUENO`, `VINCULO_ANTIOQUIA` y demás en `dim_exportador` y en la vista |
 
