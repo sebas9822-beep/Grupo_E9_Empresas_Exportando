@@ -1,0 +1,22 @@
+# Datos crudos (~1,5 GB): se regeneran con los pasos 1, 2 y 5 o se apuntan con EXPO_RAW_DIR
+data/raw/*
+!data/raw/README.md
+
+# Intermedios regenerables
+data/interim/
+*.duckdb
+*.duckdb.wal
+.tmp/
+*.part
+
+# Python / entornos / editores
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*.xlsx

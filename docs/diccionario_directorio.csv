@@ -1,0 +1,34 @@
+campo,descripcion,fuente
+RANKING_ANTIOQUIA_FOB,Posición por FOB total entre los exportadores antioqueños (A+B),Cálculo propio
+RANKING_NACIONAL_FOB,Posición por FOB total entre todos los exportadores personas jurídicas,Cálculo propio
+NIT,NIT del exportador sin dígito de verificación ni ceros a la izquierda,DIAN
+RAZON_SOCIAL,Razón social más reciente declarada a la DIAN (si la DIAN no la publicó se toma la del RUES),DIAN / RUES
+RAZON_SOCIAL_DIAN / RAZON_SOCIAL_RUES,Razón social según cada fuente,DIAN / RUES
+VINCULO_ANTIOQUIA,"A = empresa antioqueña: matrícula principal en una cámara de comercio de Antioquia (Medellín, Aburrá Sur, Oriente Antioqueño, Magdalena Medio, Urabá); B = domicilio fuera pero el departamento de origen principal de su mercancía (por FOB) es Antioquia; C = domicilio fuera y solo parte de su mercancía es de origen Antioquia; D = sin relación",RUES + DIAN
+EMPRESA_ANTIOQUENA,VERDADERO si VINCULO_ANTIOQUIA = A (definición estricta),Cálculo propio
+ES_EXPORTADOR_ANTIOQUENO,VERDADERO si VINCULO_ANTIOQUIA es A o B,Cálculo propio
+CAMARA_COMERCIO / FUENTE_DOMICILIO,"Cámara de comercio de la matrícula principal vigente (prioriza ACTIVA, luego NUEVA POR TRASLADO por cambio de domicilio, luego la renovada más recientemente; excluye sucursales y agencias) y de dónde salió el domicilio",RUES (datos.gov.co c82u-588k)
+MUNICIPIO_DIAN_DIRECCION_PROPIA / DEPTO_DIAN_DIRECCION_PROPIA,"Municipio de la dirección declarada a la DIAN, usando solo direcciones que no comparten más de 5 NIT. La dirección DIAN muchas veces es la de la agencia de aduanas, por eso no es el domicilio principal",DIAN + DIVIPOLA
+DEPTO_ORIGEN_PRINCIPAL_MERCANCIA,Departamento de origen de la mercancía con mayor FOB del exportador,DIAN (REGION_DE_ORIGEN)
+SECTOR_EXPORTADOR_PRINCIPAL,Sector con mayor FOB: Minero-energético / Agrícola y agroindustrial (MADR) / Industria y otros,DIAN + MinCIT + MinAgricultura
+PCT_FOB_MINERO_ENERGETICO,"% del FOB en capítulos 26 y 27, ferroníquel (720260), oro (7108), plata (7106), platino (7110), desperdicios de metal precioso (7112) y piedras preciosas (7103). Calibrado contra la serie NME de MinCIT",DIAN + MinCIT (vwqt-xc3z)
+PCT_FOB_AGRICOLA_MADR / PRODUCTO_AGRICOLA_PRINCIPAL_MADR,% del FOB en subpartidas agrícolas/agroindustriales según MinAgricultura y producto agrícola principal (p. ej. Banano / Café / Flores),MinAgricultura (rfip-pkv5 y 5fct-ib9u)
+FOB_USD_AAAA,"Valor FOB exportado en dólares en el año AAAA. El año en curso acumula solo hasta el último mes publicado (ver data/processed/cobertura.json)",DIAN
+FOB_USD_TOTAL,Suma FOB de todo el periodo cubierto,DIAN
+FOB_USD_ORIGEN_ANTIOQUIA / PCT_FOB_ORIGEN_ANTIOQUIA,FOB de mercancía con origen Antioquia y su porcentaje del total del exportador,DIAN
+CLASE_EXPORTADOR,1 economía mixta; 2 privada; 3 pública,DIAN
+PESO_NETO_KGS_TOTAL,Peso neto exportado en kg,DIAN
+N_REGISTROS / N_DECLARACIONES,Número de líneas (ítems) y de declaraciones de exportación distintas,DIAN
+N_MESES_CON_EXPORTACION / PRIMER_MES / ULTIMO_MES,Meses con al menos una exportación en el periodo cubierto,DIAN
+N_PAISES_DESTINO / TOP3_PAISES_DESTINO,Número de países destino y los 3 principales con su % del FOB (nombres M49 normalizados),DIAN
+N_SUBPARTIDAS / TOP5_SUBPARTIDAS / CAPITULO_ARANCEL_PRINCIPAL,Productos exportados (subpartida a 10 dígitos con cero inicial) y capítulo arancelario (2 dígitos) principal,DIAN
+ADUANA_SALIDA_PRINCIPAL / MODO_TRANSPORTE_PRINCIPAL,Aduana y modo de transporte más frecuentes,DIAN
+EXPORTADOR_AAAA_MIN_1000USD,VERDADERO si exportó al menos USD 1.000 FOB en el año AAAA (umbral de Analdex),Cálculo propio
+MATRICULA / ESTADO_MATRICULA / ULTIMO_ANO_RENOVADO / FECHA_MATRICULA / TIENE_MATRICULA_ACTIVA_EN_ANTIOQUIA,Datos del registro mercantil de la matrícula principal,RUES
+CIIU_PRINCIPAL_RUES / CIIU_SECUNDARIO_RUES / ORGANIZACION_JURIDICA,Actividad económica CIIU y forma jurídica,RUES
+SS_MACROSECTOR / SS_CIIU / SS_SUPERVISOR / SS_DEPARTAMENTO_DOMICILIO / SS_CIUDAD_DOMICILIO,Solo si la empresa está entre las 10.000 más grandes (último año de corte disponible),Supersociedades (6cat-2gcs)
+SS_INGRESOS_OPERACIONALES_BILLONES_COP / SS_TOTAL_ACTIVOS_BILLONES_COP / SS_ANO_CORTE,Cifras financieras en billones de pesos (10^12) tal como las publica la fuente (2 decimales),Supersociedades
+PROVEEDOR_ESTADO_SECOP_II,VERDADERO si la empresa tiene contratos con entidades públicas en SECOP II,SECOP II (jbjy-vk9h)
+SECOP_N_CONTRATOS / SECOP_VALOR_CONTRATOS_COP / SECOP_N_ENTIDADES,"Número de contratos, valor total en pesos y número de entidades contratantes",SECOP II
+SECOP_PRIMERA_FIRMA / SECOP_ULTIMA_FIRMA,Fechas del primer y del último contrato firmado,SECOP II
+SECOP_ES_PYME,Lo que la empresa declaró en SECOP II: Sí / No / Mixto (cambió entre contratos). Única variable de tamaño disponible y solo para quienes contratan con el Estado,SECOP II

@@ -1,0 +1,100 @@
+columna,tipo,descripcion,origen
+ANIO,BIGINT,Año de la base mensual DIAN,Derivada
+MES,BIGINT,Mes de la base mensual DIAN,Derivada
+ARCHIVO_FUENTE,VARCHAR,Nombre del .zip mensual de la DIAN de donde sale la línea,Derivada
+FECHA_PROCESO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NUMERO_SERIE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+OFICINA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_ADUANA_DESPACHO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+ADUANA_DESPACHO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_IDENT,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NIT_EXPORTADOR,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_USUARIO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_USUARIO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+CLASE_EXPORTADOR,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_DPTO_EXPORTADOR,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_PAIS_DESTINO_NUM,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_PAIS_DESTINO_ALF,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_PAIS_DESTINO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+PAIS_DESTINO_FINAL,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+CIUDAD_DESTINATARIO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NUM_SOLICITUD_AUTO_EMBARQUE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_DECLARACION,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_DESPACHO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_LUGAR_SALIDA_NUM,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_LUG_SALIDA_ALF,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_REGION_PROCEDENCIA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+REGION_PROCEDENCIA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NUM__DECLA_EXPORTACION_ANT,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+FECH_DECLA_EXPORTACION_ANT,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NUM_DECLARACION_PRECEDENTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+FECH_DECLA_PRECEDENTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_MODALIDAD_PRECEDENTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_MONEDA_TRANSACCION,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_MODO_TRANSPORTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+MODO_TRANSPORTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+BANDERA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_NACIONALIDAD_BANDERA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NACIONALIDAD_BANDERA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_REGIMEN_CAN,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_MODALIDAD_EXPORTACION,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+MODALIDAD_EXPORTACION,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+FORMA_PAGO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_TIPO_EMBARQUE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_DE_EMBARQUE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_TIPO_DATOS,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_DE_DATOS,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+TIPO_CERTIFICADO_ORIGEN,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+SISTEMAS_ESPECIALES,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_EXPORTACION_TRANSITO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+EXPORTACION_EN_TRANSITO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+SUBPARTIDA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_REGION_ORIGEN,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+REGION_DE_ORIGEN,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_UNIDAD_FISICA_NUM,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_UNIDAD_FISICA_ALF,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+UNIDAD_FISICA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+CANTIDAD_UNIDADES_FISICAS,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+PESO_BRUTO_KGS,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+PESO_NETO_KGS,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+VALOR_FOB_USD,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+VALOR_FOB_PESOS,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+VLR_SERIE_AGREGADO_NAL_USD,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+VALOR_SERIE_FLETES_USD,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+VALOR_SERIE_SEGUROS_USD,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+VLR_SERIE_OTROS_GASTOS_USD,DOUBLE,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+COD_ADUANA_SALIDA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+ADUANA_SALIDA,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+FECHA_SOLICITUD_AUTO_EMBARQUE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NUMERO_FORMULARIO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+FECHA_DECLARACION_EXPORTACION,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+RAZON_SOCIAL_EXPORTADOR,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+DIREC_EXPORTADOR,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+NIT_DECLARANTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+RAZON_SOCIAL_DECLARANTE,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+RAZON_SOCIAL_DESTINATARIO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+DOMICILIO_DESTINATARIO,VARCHAR,Variable original DIAN (ver docs/referencias/Ficha-Tecnica-bases-estadisticas-de-Comercio-Exterior.pdf),DIAN
+SUBPARTIDA_10D,VARCHAR,Subpartida arancelaria a 10 dígitos con cero inicial (la DIAN la publica como número y pierde el 0 de los capítulos 01-09),Derivada
+PERIODO,DATE,Primer día del mes (fecha),Derivada
+COD_MPIO_DIRECCION_DECLARADA,VARCHAR,Código DIVIPOLA de 5 dígitos de COD_DPTO_EXPORTADOR. OJO: muchas veces es la dirección de la agencia de aduanas,Derivada
+MUNICIPIO_DIRECCION_DECLARADA,VARCHAR,Municipio de la dirección declarada (DIVIPOLA). No usar como domicilio de la empresa,Derivada
+DEPTO_DIRECCION_DECLARADA,VARCHAR,Departamento de la dirección declarada (DIVIPOLA). No usar como domicilio de la empresa,Derivada
+DIRECCION_DECLARADA_EN_ANTIOQUIA,BOOLEAN,VERDADERO si la dirección declarada está en Antioquia (no confiable como domicilio),Derivada
+ORIGEN_MERCANCIA_ANTIOQUIA,BOOLEAN,VERDADERO si el departamento de origen de la mercancía (COD_REGION_ORIGEN) es Antioquia,Derivada
+ES_PERSONA_NATURAL,BOOLEAN,VERDADERO si el exportador es una persona natural anonimizada por la DIAN (razón social PERSONA NATURAL sin NIT de empresa),Derivada
+RAZON_SOCIAL_ENMASCARADA,BOOLEAN,VERDADERO si la DIAN publicó PERSONA NATURAL o dejó vacía la razón social pero la línea trae NIT de empresa (pasa en septiembre de 2024); la línea se atribuye a la empresa,Derivada
+NIT,VARCHAR,NIT del exportador sin ceros a la izquierda (vacío para personas naturales),Derivada
+PAIS_DESTINO_NORM,VARCHAR,País destino con nombre M49 homogéneo para 2024-2026,Derivada
+SECTOR_EXPORTACION,VARCHAR,Minero-energético / Agrícola y agroindustrial (MADR) / Industria y otros,Derivada
+ES_MINERO_ENERGETICO,BOOLEAN,"Capítulos 26-27, ferroníquel, oro, plata, platino, desperdicios de metal precioso y piedras preciosas (calibrado con MinCIT NME)",Derivada
+ES_AGRICOLA_MADR,BOOLEAN,Subpartida clasificada como agrícola/agroindustrial por MinAgricultura,Derivada
+PRODUCTO_AGRICOLA_MADR,VARCHAR,"Producto agrícola MinAgricultura (p. ej. Banano, Café, Flores)",Derivada
+TRADICION_AGRICOLA_MADR,VARCHAR,Tradicional / No tradicional (MinAgricultura),Derivada
+NIT_EMPRESA_ANTIOQUENA,BOOLEAN,La empresa tiene su matrícula principal en una cámara de comercio de Antioquia (vínculo A),Derivada
+NIT_ES_EXPORTADOR_ANTIOQUENO,BOOLEAN,Vínculo A o B con Antioquia,Derivada
+NIT_VINCULO_ANTIOQUIA,VARCHAR,"A/B/C/D, ver docs/metodologia.md",Derivada
+NIT_CAMARA_COMERCIO,VARCHAR,Cámara de comercio de la matrícula principal (RUES),Derivada
+NIT_CIIU_RUES,VARCHAR,CIIU principal de la empresa (RUES),Derivada
+NIT_SECTOR_EXPORTADOR_PRINCIPAL,VARCHAR,Sector con mayor FOB de la empresa,Derivada
+NIT_PROVEEDOR_ESTADO_SECOP_II,BOOLEAN,La empresa tiene contratos con el Estado en SECOP II,Derivada
+NIT_ES_PYME_SECOP,VARCHAR,Lo que la empresa declaró en SECOP II: Sí / No / Mixto,Derivada
