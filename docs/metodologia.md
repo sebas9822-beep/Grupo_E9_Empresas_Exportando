@@ -64,3 +64,17 @@ Sin esta corrección, en el directorio se pierde septiembre de 2024 de cada empr
 ## 8. BD única depurada
 
 El paso 9 convierte los productos anteriores en una sola base con modelo estrella y corrige problemas que quedaban en ellos: el país de destino de las zonas francas (todas aparecían como "ZFP de Rionegro S.A."), los dos esquemas de códigos de país y bandera (2024 frente a 2025), errores de digitación, códigos con y sin ceros a la izquierda, ceros que significan "no aplica", fechas guardadas como texto y columnas redundantes. El detalle está en [limpieza_bd_depurada.md](limpieza_bd_depurada.md).
+
+## 9. BD principal (capa analítica)
+
+El paso 10 construye sobre la depurada la **BD principal de trabajo** (`BD_exportaciones_Colombia_analitica`), sin modificar la depurada. Resuelve los 10 hallazgos del diagnóstico de la depurada:
+
+- llaves primarias en todas las tablas;
+- catálogos con fuente y nivel de confianza;
+- banderas de precio atípico con la regla de Tukey en logaritmo (k = 3, por subpartida, con referencia en exportaciones comerciales);
+- pesos y cantidades reconstruidos solo cuando el precio se aleja 100 veces o más de la mediana; el FOB no se toca;
+- Supersociedades en pesos de diciembre de 2025 con el IPC, e intensidad exportadora;
+- historia de razón social y traslados de domicilio;
+- panel empresa-mes.
+
+Cuadra con el DANE en 2024, 2025 y enero-septiembre de 2026 (diferencia máxima 0,009 %). El detalle de las técnicas, las reglas y las decisiones está en [bd_principal_capa_analitica.md](bd_principal_capa_analitica.md).

@@ -1,0 +1,59 @@
+TABLA,COLUMNAS,TABLA_REFERENCIA,COLUMNAS_REFERENCIA,TIPO,FILAS_HUERFANAS
+dim_departamento,COD_DEPTO,,,PRIMARY KEY declarada,0
+dim_municipio,COD_MPIO,,,PRIMARY KEY declarada,0
+dim_municipio,COD_DEPTO,dim_departamento,COD_DEPTO,FOREIGN KEY declarada,0
+dim_pais,COD_PAIS,,,PRIMARY KEY declarada,0
+dim_zona_franca,COD_ZONA_FRANCA,,,PRIMARY KEY declarada,0
+dim_aduana,COD_ADUANA,,,PRIMARY KEY declarada,0
+dim_declarante,NIT_DECLARANTE,,,PRIMARY KEY declarada,0
+dim_subpartida,SUBPARTIDA,,,PRIMARY KEY declarada,0
+ref_mincit_trimestral,TRIMESTRE,,,PRIMARY KEY declarada,0
+ref_madr_agricola_anual,ANIO,,,PRIMARY KEY declarada,0
+log_depuracion,PASO,,,PRIMARY KEY declarada,0
+info_bd_depurada,CLAVE,,,PRIMARY KEY declarada,0
+ref_dane_publicaciones,PERIODO_REFERENCIA,,,PRIMARY KEY declarada,0
+cat_clase_exportador,CODIGO,,,PRIMARY KEY declarada,0
+cat_modo_transporte,CODIGO,,,PRIMARY KEY declarada,0
+cat_modalidad_exportacion,CODIGO,,,PRIMARY KEY declarada,0
+cat_unidad_fisica,CODIGO,,,PRIMARY KEY declarada,0
+cat_tipo_identificacion,CODIGO,,,PRIMARY KEY declarada,0
+cat_certificado_origen,CODIGO,,,PRIMARY KEY declarada,0
+cat_forma_pago,CODIGO,,,PRIMARY KEY declarada,0
+cat_regimen_can,CODIGO,,,PRIMARY KEY declarada,0
+cat_lugar_salida,CODIGO,,,PRIMARY KEY declarada,0
+cat_tipo_usuario,CODIGO,,,PRIMARY KEY declarada,0
+map_ciudad_destinatario,"CIUDAD_DESTINATARIO, COD_PAIS_DESTINO",,,PRIMARY KEY declarada,0
+map_ciudad_destinatario,COD_PAIS_DESTINO,dim_pais,COD_PAIS,FOREIGN KEY declarada,0
+dim_exportador_analitica,NIT,,,PRIMARY KEY declarada,0
+dim_exportador_analitica,COD_MPIO_DIAN_DIRECCION_PROPIA,dim_municipio,COD_MPIO,FOREIGN KEY declarada,0
+dim_exportador_analitica,COD_DEPTO_ORIGEN_PRINCIPAL,dim_departamento,COD_DEPTO,FOREIGN KEY declarada,0
+hechos_analitica,ID_REGISTRO,,,PRIMARY KEY declarada,0
+hechos_analitica,NIT_EXPORTADOR,dim_exportador_analitica,NIT,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,SUBPARTIDA,dim_subpartida,SUBPARTIDA,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_PAIS_DESTINO,dim_pais,COD_PAIS,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_PAIS_BANDERA,dim_pais,COD_PAIS,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_ZONA_FRANCA_DESTINO,dim_zona_franca,COD_ZONA_FRANCA,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_ADUANA_DESPACHO,dim_aduana,COD_ADUANA,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_ADUANA_SALIDA,dim_aduana,COD_ADUANA,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_DEPTO_PROCEDENCIA,dim_departamento,COD_DEPTO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_DEPTO_ORIGEN,dim_departamento,COD_DEPTO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_MPIO_DIRECCION_DECLARADA,dim_municipio,COD_MPIO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,NIT_DECLARANTE,dim_declarante,NIT_DECLARANTE,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,CLASE_EXPORTADOR,cat_clase_exportador,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_MODO_TRANSPORTE,cat_modo_transporte,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_MODALIDAD_EXPORTACION,cat_modalidad_exportacion,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_UNIDAD_FISICA,cat_unidad_fisica,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,TIPO_IDENTIFICACION,cat_tipo_identificacion,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,TIPO_CERTIFICADO_ORIGEN,cat_certificado_origen,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,FORMA_PAGO,cat_forma_pago,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_REGIMEN_CAN,cat_regimen_can,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,COD_LUGAR_SALIDA,cat_lugar_salida,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+hechos_analitica,TIPO_USUARIO,cat_tipo_usuario,CODIGO,FOREIGN KEY validada en cada construcción (no declarada),0
+exportador_pais,"NIT, COD_PAIS_DESTINO",,,PRIMARY KEY declarada,0
+exportador_pais,NIT,dim_exportador_analitica,NIT,FOREIGN KEY declarada,0
+exportador_pais,COD_PAIS_DESTINO,dim_pais,COD_PAIS,FOREIGN KEY declarada,0
+exportador_subpartida,"NIT, SUBPARTIDA",,,PRIMARY KEY declarada,0
+exportador_subpartida,NIT,dim_exportador_analitica,NIT,FOREIGN KEY declarada,0
+exportador_subpartida,SUBPARTIDA,dim_subpartida,SUBPARTIDA,FOREIGN KEY declarada,0
+panel_exportador_mes,"NIT, PERIODO",,,PRIMARY KEY declarada,0
+panel_exportador_mes,NIT,dim_exportador_analitica,NIT,FOREIGN KEY declarada,0
