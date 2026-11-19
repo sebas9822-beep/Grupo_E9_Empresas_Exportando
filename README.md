@@ -8,20 +8,15 @@ Equipo E9 · Análisis de Datos Básico · Estud-IA (Capa 2- Sebastian Gaviria L
 
 ### 1. Usuario y decisión
 > ¿Quién usará el resultado (una persona o un área) y qué va a decidir con él?
-
-Propuesta: un área que acompaña o atiende a empresas exportadoras de Antioquia (por ejemplo, una cámara de comercio o un área comercial). Con el resultado decide a qué empresas y sectores darles prioridad.
+Propuesta: Consultoras que acompañan o atienden a empresas exportadoras de Antioquia (Cámara de comercio,área comercial,ProColombia), incluso el resultado puede ser usado por las mismas empresas Antioqueñas exportadoras. Con el resultado las empresas exportadoras y consultoras identifican riesgos y oportunidades de diversificación comercial, lo que las llevan a decidir a qué empresas, sectores y mercados darles prioridad.
 
 ### 2. Pregunta principal
 > Una sola pregunta que ayude a tomar esa decisión.
-
-¿Qué empresas antioqueñas exportan, qué productos venden y a qué países, y cómo cambió eso entre 2024 y 2026?
-Pendiente por complementar o cambiar
+¿Qué porcentaje de las exportaciones de cada producto se concentra en sus tres principales países compradores?
 
 ### 3. Fuente de datos
 > Enlace o nombre de la fuente. ¿Es pública o es una muestra de práctica inventada (sintética)? Si es inventada, dilo aquí.
-
 Pública. La base principal son las [bases estadísticas de exportaciones de la DIAN](https://www.dian.gov.co/dian/cifras/Paginas/Bases-Estadisticas-de-Comercio-Exterior-Importaciones-y-Exportaciones.aspx), un archivo por mes. Se completa con datos abiertos del RUES (cámaras de comercio), Supersociedades, SECOP II, MinAgricultura, MinCIT,Procolombia y DIVIPOLA. La lista con enlaces está en [docs/fuentes.md](docs/fuentes.md).
-
 En `datos/originales/` hay una muestra de 1.000 filas de la DIAN; los archivos completos pesan 1,5 GB y no se suben.
 
 ### 4. Qué representa una fila
@@ -40,34 +35,34 @@ MODO_TRANSPORTE_PRINCIPAL
 
 ### 5. Periodo
 > ¿Qué fechas cubren los datos?
-
-De enero de 2024 a diciembre de 2025.
+De enero de 2021 a diciembre de 2025.
 
 ### 6. Cuatro indicadores
 Qué mide y cómo se calcula:
-- Valor exportado no minero-energético (total). Es la exportación que depende de las empresas y no del precio del oro.
-- Empresas exportadoras (conteo). Mide qué tan grande es la base.
-- Permanencia (porcentaje). Mide si esa base se sostiene, y una de cada cuatro empresas no repite.
-- Empresas de un solo destino (porcentaje). Mide la diversificación, y casi la mitad depende de un solo país.
+- Participación de cada país en las exportaciones de cada producto (%).
+- Concentración en los tres principales países compradores (%).
+- Número de países compradores por producto.
+- Evolución anual de la concentración de las exportaciones (%).
 
 ### 7. Fuera de alcance
-Datos internos de la empresa cómo capacidad de producción, costos totales  
+Determinar por qué los países compran o dejan de comprar determinados productos, predecir exportaciones futuras o evaluar el impacto económico de perder un comprador. 
 
 ## Comparaciones, riesgos y mapa de preguntas
 
 ### Dos comparaciones útiles
-1. Por año: 2024, 2025 y 2026, comparando los mismos meses (enero a septiembre).
-2. Por sector: minero-energético, agrícola e industria. También por vínculo de la empresa con Antioquia (A: domicilio en Antioquia; B: mercancía principalmente antioqueña).
+1. Por año: Concentración de los principales productos desde 2021 hasta 2025, comparando los mismos meses (enero a diciembre).
+2. Por producto: Calcular que porcentaje de las exportaciones de cada producto se concentra en sus tres principales destinos.
 
 ### Tres riesgos de calidad
-1. **La dirección del exportador en la DIAN suele ser la de su agencia de aduanas**: una sola dirección de Bogotá aparece en 1.183 NIT. Por eso el domicilio se toma del RUES (cámara de comercio).
-2. **La DIAN cambia formatos entre archivos.** En septiembre de 2024 ocultó la razón social de 3.927 empresas, y en 2025 cambió los códigos de país. Cada regla quedó en la [bitácora](bitacora.md). Si la fuente falla o un mes viene mal, los totales se comparan con MinCIT, que cuadra trimestre a trimestre.
-3. **Envíos que no salen del país**: USD 2.616 M van a zonas francas colombianas, y 2026 está incompleto. Se marcan con `ES_DESTINO_ZONA_FRANCA` y los años se comparan en los mismos meses.
+1. **Clasificación de productos**: productos	Que un mismo producto aparezca con diferentes códigos o descripciones, generando errores en su agrupación.
+2. **Datos incompletos o inconsistentes.**: Que existan registros sin país de destino, sin valor FOB o con información duplicada.
+3. **Diferencias en los registros de exportación**: Que existan diferencias entre las fuentes o cambios en la forma de registrar los productos y países durante los años analizados.
 
 ### Mapa de preguntas
-- **¿Qué pasó?** Cuánto exportaron las empresas antioqueñas y cuántas exportaron, por año y por sector.
-- **¿Dónde o cuándo es distinto?** Por sector, producto, país de destino y subregión (cámara de comercio).
-- **¿Qué recomendaría y con qué límites?** Qué empresas y sectores priorizar. Límites: solo bienes, sin rentabilidad y sin personas naturales.
+- **¿Qué pasó?** ¿Cómo se comportaron las exportaciones de los principales productos de Antioquia entre 2021 y 2025?, ¿Cuáles fueron los principales productos exportados?, ¿Cuáles fueron sus principales países compradores?, ¿Qué porcentaje de las exportaciones se concentró en los tres principales destinos?
+- **¿Dónde o cuándo es distinto?** ¿Qué productos presentan mayores niveles de concentración y cómo ha cambiado esa situación durante el periodo analizado?, ¿Qué productos tienen mayor diversificación de destinos?, ¿En qué años aumentó o disminuyó la concentración?, ¿Qué productos experimentaron los cambios más importantes?.
+- **¿Qué recomendaría y con qué límites?** ¿Qué productos deberían buscar nuevos mercados internacionales?, ¿Qué recomendaciones podrían plantearse a las empresas exportadoras y organismos de promoción comercial?
+-  Límites: No se determinarán las causas exactas de la concentración, no se predecirán las exportaciones futuras, no se garantizará que nuevos mercados compren los productos, las recomendaciones se basarán en los patrones encontrados en los datos, no en estudios de demanda de cada país.
 
 ## Cifra de control
 
