@@ -1,0 +1,5 @@
+# Descargas e intermedios regenerables con descargar.py, extraer.py y analisis.py
+scripts/zips/
+scripts/parquet/
+scripts/tmp/
+scripts/out/
