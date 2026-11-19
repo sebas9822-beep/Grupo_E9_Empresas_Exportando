@@ -97,6 +97,7 @@ Las consultas que dan estas cifras están en [consultas/](consultas/).
 | `datos/limpios/bd_analitica/` | **BD principal** en parquet (sin repetir los hechos de la depurada) y su `esquema.sql` |
 | `datos/limpios/` | BD depurada en parquet (insumo de la principal), directorio antioqueño (CSV y Excel), serie mensual, validaciones y NIT con ciudad del comprador por completar |
 | `consultas/` | Consultas SQL comentadas, con su cifra de control (sesión 3) |
+| [resolver/](resolver/) | Cómo se resolvió la concentración de las exportaciones de Antioquia por país y producto (2016-2025): paso a paso, consultas con su cifra de control y scripts para reproducirlo |
 | `notebooks/` | Cuaderno de Colab: consultas sobre la muestra y sobre la BD depurada (sesiones 3 a 5) |
 | `tablero/` | Capturas y enlace del tablero (sesión 6) |
 | `docs/` | Metodología, fuentes, limpieza detallada y cómo correr el proceso completo |
