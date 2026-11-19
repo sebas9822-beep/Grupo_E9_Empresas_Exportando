@@ -1,5 +1,7 @@
 # BD única depurada: qué se limpió y qué quedó
 
+> **Esta base es el insumo. La BD principal para trabajar es la capa analítica** (`BD_exportaciones_Colombia_analitica`, paso 10), que parte de esta, no la modifica y le agrega llaves, catálogos, banderas de calidad y magnitudes corregidas: [bd_principal_capa_analitica.md](bd_principal_capa_analitica.md).
+
 El paso 9 del pipeline (`pipeline/p09_bd_depurada.py`) toma los productos del paso 7 (que quedan en `datos/intermedios/`, sin subir) y los convierte en **una sola base de datos consistente**, con un modelo estrella (una tabla de hechos y sus dimensiones), lista para analizar. Cubre enero de 2024 a septiembre de 2026.
 
 - **Tabla de hechos:** 3.613.237 líneas de declaración, por USD 142.059,8 M FOB.
@@ -138,7 +140,7 @@ Para pasar código que usaba los parquet del paso 7:
 ## 6. Limitaciones
 
 - Las personas naturales no tienen NIT publicado: están en los hechos, pero no en el directorio.
-- La ciudad del destinatario es texto libre y no se normaliza (aparecen "ISTANBUL" y "ESTANBUL").
+- La ciudad del destinatario es texto libre y no se normaliza (aparecen "ISTANBUL" y "ESTANBUL"). En la BD principal hay una versión normalizada aproximada.
 - La base DIAN no trae la descripción de las subpartidas; solo las agrícolas la tienen, gracias a MinAgricultura.
-- Algunos códigos DIAN (tipo de usuario, oficina, forma de pago, régimen CAN, certificado de origen) no tienen descripción en la fuente.
+- Algunos códigos DIAN (tipo de usuario, oficina, forma de pago, régimen CAN, certificado de origen) no tienen descripción en la fuente. En la BD principal tienen catálogo con fuente y nivel de confianza; oficina y modalidad precedente se retiran.
 - El año en curso está incompleto: `info_bd` dice hasta qué mes llega.
