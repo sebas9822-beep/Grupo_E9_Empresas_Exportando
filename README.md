@@ -120,4 +120,6 @@ Las consultas que dan estas cifras están en [consultas/](consultas/).
 
 ---
 
+En la carpeta resolver esta el problema planteado, la respuesta y como se resolvio
+
 Proyecto desarrollado en Estud-IA · Capa 2 · Análisis de Datos.
