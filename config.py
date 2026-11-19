@@ -13,7 +13,7 @@ datos/originales/ usa las mismas subcarpetas que esa carpeta, así que sirve tal
 Las carpetas siguen la plantilla del curso (Estud-IA · Análisis de Datos Básico):
     datos/originales/   datos tal como se descargaron (no se modifican; solo se versiona una muestra)
     datos/intermedios/  todo lo regenerable, incluidos los productos de los pasos 7 y 8 (no se versiona)
-    datos/limpios/      la BD depurada del paso 9 y sus exportaciones (sí se versiona)
+    datos/limpios/      la BD depurada (paso 9), la BD principal (paso 10) y sus exportaciones (sí se versiona)
 """
 import os
 from pathlib import Path
@@ -46,6 +46,10 @@ OUT_ANTIOQUIA = PROCESSED / "exportaciones_antioquia"   # un parquet por año
 # Datos limpios (paso 9)
 OUT_BD_DEPURADA = LIMPIOS / "bd_depurada"              # BD única depurada: parquet por tabla
 BD_DEPURADA_DUCKDB = OUT_BD_DEPURADA / "BD_exportaciones_Colombia_depurada.duckdb"  # se arma localmente, no se versiona
+
+# BD PRINCIPAL de trabajo (paso 10): capa analítica sobre la depurada
+OUT_BD_ANALITICA = LIMPIOS / "bd_analitica"            # parquet de la capa (sin repetir los hechos) y esquema.sql
+BD_ANALITICA_DUCKDB = OUT_BD_ANALITICA / "BD_exportaciones_Colombia_analitica.duckdb"  # se arma con crear_bd_analitica.py, no se versiona
 
 # Periodo de análisis (el fin se detecta con lo que haya publicado la DIAN)
 PERIODO_INICIO = "2024-01"
