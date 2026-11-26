@@ -95,7 +95,8 @@ Agrupa las mismas 26.152 líneas por país de destino, con el **mismo WHERE** de
 
 ```python
 sql("""
-SELECT COD_PAIS_DESTINO, COUNT(*) AS filas, ROUND(SUM(VALOR_FOB_USD) / 1e6, 1) AS fob_musd
+SELECT COD_PAIS_DESTINO, COUNT(*) AS filas, ROUND(SUM(VALOR_FOB_USD) / 1e6, 1) AS fob_musd,
+       ROUND(100 * SUM(VALOR_FOB_USD) / SUM(SUM(VALOR_FOB_USD)) OVER (), 1) AS pct_valor
 FROM datos
 WHERE COD_DEPTO_ORIGEN = '05'
   AND COD_PAIS_DESTINO NOT IN ('XCF', 'COL')
@@ -104,11 +105,11 @@ ORDER BY fob_musd DESC
 """)
 ```
 
-Resultado: 109 países. Los tres primeros por valor:
+Resultado: 109 países. Los tres primeros por valor (el porcentaje se calcula con los valores completos y se redondea solo al final, en `pct_valor`):
 
 | País | Líneas | FOB (USD M) | % del valor |
 | --- | --- | --- | --- |
-| USA (Estados Unidos) | 7.742 | 320,3 | 26,3 % |
+| USA (Estados Unidos) | 7.742 | 320,3 | 26,2 % |
 | ITA (Italia) | 182 | 204,1 | 16,7 % |
 | CAN (Canadá) | 926 | 121,9 | 10,0 % |
 | **Los tres** | **8.850** | **646,3** | **53,0 %** |
