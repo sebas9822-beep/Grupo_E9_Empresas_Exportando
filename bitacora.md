@@ -53,6 +53,15 @@ El detalle con el FOB afectado está en [docs/limpieza_bd_depurada.md](docs/limp
 - Una razón social por NIT (la más reciente) y sus variantes en `NOMBRES_EN_FUENTE` · 332 NIT con varios nombres; 119 toman el del RUES · La misma empresa aparecía con varios nombres.
 - Revisiones sin hallazgos: FOB ≤ 0, peso neto > bruto, fechas inválidas, tasa de cambio fuera de rango, doble conteo de correcciones · 0 líneas · Se verificó y no hizo falta corregir.
 
+Retos avanzados de la sesión 4, sobre los hechos de septiembre de 2026 (115.049 líneas). Hoy no se borra nada: se detecta y se cuenta; la limpieza con pandas es el jueves, desde el original. El detalle está en [retos/S4_retos_avanzados.md](retos/S4_retos_avanzados.md).
+
+- Origen Antioquia con destino Colombia (COL) · 220 líneas (USD 86.409) · Se excluyen de «vendido al exterior»: el comprador está en Medellín o Bogotá y la mercancía no sale del país. La bandera `ES_DESTINO_ZONA_FRANCA` no las quita, así que la definición lleva también `COD_PAIS_DESTINO <> 'COL'` (A1).
+- Ciudad del comprador con un carácter dañado («MEDELL�N») · 140 líneas; ninguna dentro del filtro de la consulta 1 · No afecta la pregunta (no se agrupa por ciudad); se normaliza el jueves con pandas (A1).
+- Partidas con 3 países o menos · 318 de 566 partidas (6,7 % del FOB) · No entran al indicador, porque en ellas la concentración en 3 países da 100 % por construcción; se reportan aparte con su número de países y la parte del comprador principal (A2).
+- Partidas con 4 países o más pero menos de USD 100.000 en el mes · 81 partidas · No entran al indicador: un envío pequeño mueve su cifra; se cuentan aparte (A2).
+- Llave de la tabla de países · 0 repetidos en 215 códigos · Antes de cada unión se comprueba que la llave no se repite y se cuentan las líneas antes y después: un código repetido (Estados Unidos) inflaría la unión en 7.742 líneas y USD 320,3 M sin dar error (A4).
+- Una partida domina el valor (7108, oro) · 170 líneas, 55,0 % del FOB · Se reporta aparte: decide el total y la ponderada; sin ella, la concentración en 3 países baja de 53,0 % a 44,6 % (A5).
+
 ## Limpieza de la BD principal (paso 10)
 
 El detalle está en [docs/bd_principal_capa_analitica.md](docs/bd_principal_capa_analitica.md) y en [docs/log_bd_analitica.csv](docs/log_bd_analitica.csv).
@@ -71,6 +80,7 @@ El detalle está en [docs/bd_principal_capa_analitica.md](docs/bd_principal_capa
 
 ## Uso de IA
 
+- Le pedimos a Claude resolver los retos avanzados de la sesión 4 (A1 a A5) sobre los hechos de septiembre de 2026, con una consulta por pregunta y su cifra de control · Aceptamos la definición 1 de origen Antioquia, la partida como producto, la regla de 4 países y USD 100.000, y reportar la mediana con el oro aparte; A6 lo hacemos en la sala sin IA y cada reto lo firma quien lo explica · Claude corrió cada consulta sobre el parquet del repositorio y cruzó los totales con la consulta 1 (26.152 líneas, USD 1.220,1 M); nosotros las volvemos a correr en Colab, prediciendo antes cada número.
 - Le pedimos a varias IAs (DeepSeek, Gemini, Grok, Kimi y Claude Opus) que buscaran fuentes de datos de empresas exportadoras · Aceptamos solo fuentes oficiales con NIT y descartamos las de pago y las que no tenían exportaciones · Abrimos cada fuente y dejamos la lista con enlaces en [docs/fuentes.md](docs/fuentes.md).
 - Le pedimos a Claude (Anthropic) el código que descarga y une las fuentes (pasos 1 a 8 de `pipeline/`) · Aceptamos el proceso y la regla de domicilio por RUES · Lo verificamos cuadrando los totales con MinCIT, MinAgricultura y Analdex.
 - Le pedimos a Claude que depurara la base (paso 9) y organizara el repositorio con la plantilla del curso · Aceptamos las reglas de limpieza. Cambiamos dos cosas: no borrar las 10 líneas idénticas, porque sin ellas el total no cuadra con MinCIT, y quitar el nombre y el domicilio del comprador por la regla de datos personales · Lo verificamos con conteos antes y después, llaves sin huérfanos, el cuadre con MinCIT y las cifras de control de `consultas/`.
